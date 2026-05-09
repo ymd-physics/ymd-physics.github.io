@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN">
+<head>
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>1. Hello, Rust! | Yi-Ming Ding</title>
+  <meta name="description" content="在留白与墨色之间，安放写作、研究与生活。">
+  
+  <meta name="theme-color" content="#f5f1e8">
+  
+  
+  <link rel="stylesheet" href="/css/style.css">
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body class="layout-page">
+  <div class="site-shell">
+    <div class="ink-wash ink-wash-left" aria-hidden="true"></div>
+    <div class="ink-wash ink-wash-right" aria-hidden="true"></div>
+    
+<header class="site-header">
+  <div class="masthead-frame">
+    <a class="brand-mark" href="/">
+      <span class="brand-seal">茗</span>
+      <span class="brand-copy">
+        <strong class="brand-name-en">Yi-Ming Ding</strong>
+        <small>靈明無著，物來順應。</small>
+      </span>
+    </a>
+
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" data-nav-toggle>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span class="sr-only">切换导航</span>
+    </button>
+
+    <nav class="site-nav" id="site-nav" aria-label="Primary">
+      
+        
+        <a class="nav-link " href="/" >
+          
+
+  <span class="bilingual-text has-en nav-bilingual">
+    <span class="lang-zh">首页</span>
+    <span class="lang-en">Home</span>
+  </span>
+
+
+        </a>
+      
+        
+        <a class="nav-link is-active" href="/notes/" >
+          
+
+  <span class="bilingual-text has-en nav-bilingual">
+    <span class="lang-zh">笔记</span>
+    <span class="lang-en">Notes</span>
+  </span>
+
+
+        </a>
+      
+        
+        <a class="nav-link " href="/gallery/" >
+          
+
+  <span class="bilingual-text has-en nav-bilingual">
+    <span class="lang-zh">影集</span>
+    <span class="lang-en">Gallery</span>
+  </span>
+
+
+        </a>
+      
+        
+        <a class="nav-link " href="/publ/" >
+          
+
+  <span class="bilingual-text has-en nav-bilingual">
+    <span class="lang-zh">论文</span>
+    <span class="lang-en">Papers</span>
+  </span>
+
+
+        </a>
+      
+        
+        <a class="nav-link " href="https://github.com/ymd-physics" target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;>
+          
+
+  <span class="bilingual-text is-single nav-bilingual">
+    <span class="lang-zh">GitHub</span>
+    
+  </span>
+
+
+        </a>
+      
+        
+        <a class="nav-link " href="mailto:dingyiming@westlake.edu.cn" target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;>
+          
+
+  <span class="bilingual-text has-en nav-bilingual">
+    <span class="lang-zh">邮件</span>
+    <span class="lang-en">Email</span>
+  </span>
+
+
+        </a>
+      
+    </nav>
+  </div>
+</header>
+
+    <main class="site-main">
+      
+<article class="entry-panel page-panel">
+  <header class="entry-header">
+    
+      <h1>1. Hello, Rust!</h1>
+    
+  </header>
+  <div class="entry-content">
+    <h1 id="1-2-安装Rust"><a href="#1-2-安装Rust" class="headerlink" title="1.2 安装Rust"></a>1.2 安装Rust</h1><p>参考官网安装教程：<a target="_blank" rel="noopener" href="https://www.rust-lang.org/">https://www.rust-lang.org/</a></p>
+<h1 id="1-3-Hello-World"><a href="#1-3-Hello-World" class="headerlink" title="1.3 Hello, World"></a>1.3 Hello, World</h1><p><strong>Rust源文件的后缀为</strong> <code>main.rs</code></p>
+<p><strong>Hello-World 程序</strong></p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;Hello, World!&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>fn</code> 意为function<ul>
+<li>与C++中的<code>int main() &#123;&#125;</code>不同，Rust中的<code>main()</code>函数没有返回值，它也是每个Rust程序最先执行的代码</li>
+</ul>
+</li>
+<li><code>println!</code>是一个宏而非函数，用于输出字符串，其中<code>ln</code>意为line<ul>
+<li>它是一个<strong>Rust macro（宏）</strong></li>
+<li>上述程序中，<u>该函数前的缩进是4个空格而不是tab</u></li>
+<li>与C++一样，每一行代码以<code>;</code>结尾</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="编译方式"><a href="#编译方式" class="headerlink" title="编译方式"></a><strong>编译方式</strong></h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rustc main.rs</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>rustc</code>中的<code>c</code>意为compiler</li>
+<li><code>rustc</code>只适合编译简单的Rust程序，对于复杂的程序，需要使用<code>cargo</code></li>
+</ul>
+<p>编译成功后会生成二进制文件<code>main</code>，与源文件<code>main.rs</code>同名</p>
+<p><strong>运行二进制文件</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./main</span><br></pre></td></tr></table></figure>
+
+<h1 id="1-4-Hello-Cargo"><a href="#1-4-Hello-Cargo" class="headerlink" title="1.4 Hello, Cargo"></a>1.4 Hello, Cargo</h1><p>Cargo是Rust的构建系统和包管理工具（谁懂CMake的痛……）</p>
+<ul>
+<li>构建代码、下载依赖库、构建库</li>
+</ul>
+<p>在终端可以通过命令<code>cargo --version</code>查看Cargo版本</p>
+<hr>
+<h2 id="使用Cargo创建项目"><a href="#使用Cargo创建项目" class="headerlink" title="使用Cargo创建项目"></a>使用Cargo创建项目</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cargo new project_name</span><br></pre></td></tr></table></figure>
+
+<p>随后Cargo将生成名为<code>project_name</code>的文件夹，并包含</p>
+<ul>
+<li>文件<code>Cargo.toml</code></li>
+<li>文件夹<code>src</code><ul>
+<li>包含源文件<code>main.rs</code></li>
+<li>所有的源文件都应当放在<code>src</code>下</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="Cargo-toml"><a href="#Cargo-toml" class="headerlink" title="Cargo.toml"></a>Cargo.toml</h3><p>后缀<code>toml</code>是“Tom’s Obvious, Minimal Language”的简称，是Cargo的配置格式</p>
+<figure class="highlight toml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[package]</span></span><br><span class="line"><span class="attr">name</span> = <span class="string">&quot;project_name&quot;</span></span><br><span class="line"><span class="attr">version</span> = <span class="string">&quot;0.1.0&quot;</span></span><br><span class="line"><span class="attr">edition</span> = <span class="string">&quot;2021&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="section">[dependencies]</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>区域标题<code>[package]</code>表示下方内容是用来配置package的</li>
+<li><code>[dependencies]</code>列出项目的依赖项</li>
+</ul>
+<p><u>在Rust中，调的库或者包被称作“crate”，中文意为“板条箱”</u></p>
+<hr>
+<h2 id="Cargo构建项目"><a href="#Cargo构建项目" class="headerlink" title="Cargo构建项目"></a>Cargo构建项目</h2><p>在项目目录下，使用命令</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cargo build</span><br></pre></td></tr></table></figure>
+
+<p>来构建项目。</p>
+<ul>
+<li>如果是第一次构建，将会生成<code>cargo.lock</code>文件，该文件负责追踪项目版本，不需要手动修改</li>
+</ul>
+<p>此外，上述命令还会生成二进制文件<code>target/debug/project_name</code>，与<code>rustc</code>命令一致</p>
+<hr>
+<h2 id="Cargo构建和运行项目"><a href="#Cargo构建和运行项目" class="headerlink" title="Cargo构建和运行项目"></a>Cargo构建和运行项目</h2><p>使用命令</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cargo run</span><br></pre></td></tr></table></figure>
+
+<p>可以构建并立即运行二进制文件</p>
+<ul>
+<li>如果之前编译成功过且源代码没有改变，将直接运行二进制文件</li>
+</ul>
+<hr>
+<h2 id="Cargo检查代码"><a href="#Cargo检查代码" class="headerlink" title="Cargo检查代码"></a>Cargo检查代码</h2><p>使用命令</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cargo check</span><br></pre></td></tr></table></figure>
+
+<p>可以检查代码来确保编译，但不会生成可执行文件</p>
+<ul>
+<li>相比<code>cargo build</code>，<code>cargo check</code>的执行速度更快，用于开发过程中来检查代码问题</li>
+<li>只有在需要时或项目开发结束时，才调用<code>cargo build</code>来执行程序</li>
+</ul>
+<hr>
+<h2 id="Cargo构建和发布项目"><a href="#Cargo构建和发布项目" class="headerlink" title="Cargo构建和发布项目"></a>Cargo构建和发布项目</h2><p>注意<code>cargo build</code>命令主要用于个人调试使用，如果是为发布而构建，那么一般执行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cargo build --release</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>该命令的编译时间更长，同时将优化代码</li>
+<li>可执行文件将生成在<code>target/release</code>而不是<code>target/debug</code></li>
+</ul>
+
+  </div>
+</article>
+
+    </main>
+    <footer class="site-footer">
+  <div class="footer-inner">
+    
+    
+      <p class="footer-credit">This website is technically powered by the blog famework Hexo</p>
+    
+    
+      <p class="footer-credit">This page design was co-created by me and GPT-5.3-Codex.</p>
+    
+    
+      <p class="footer-credit"><em>The background image is Along the River During the Qingming Festival (清明上河图).</em></p>
+    
+    <p>&copy; 2023 Yi-Ming Ding</p>
+  </div>
+</footer>
+
+  </div>
+  <script src="/js/main.js"></script>
+</body>
+</html>

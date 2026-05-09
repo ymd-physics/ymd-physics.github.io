@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN">
+<head>
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>8. Vector, String, HashMap | Yi-Ming Ding</title>
+  <meta name="description" content="在留白与墨色之间，安放写作、研究与生活。">
+  
+  <meta name="theme-color" content="#f5f1e8">
+  
+  
+  <link rel="stylesheet" href="/css/style.css">
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body class="layout-page">
+  <div class="site-shell">
+    <div class="ink-wash ink-wash-left" aria-hidden="true"></div>
+    <div class="ink-wash ink-wash-right" aria-hidden="true"></div>
+    
+<header class="site-header">
+  <div class="masthead-frame">
+    <a class="brand-mark" href="/">
+      <span class="brand-seal">茗</span>
+      <span class="brand-copy">
+        <strong class="brand-name-en">Yi-Ming Ding</strong>
+        <small>靈明無著，物來順應。</small>
+      </span>
+    </a>
+
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" data-nav-toggle>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span class="sr-only">切换导航</span>
+    </button>
+
+    <nav class="site-nav" id="site-nav" aria-label="Primary">
+      
+        
+        <a class="nav-link " href="/" >
+          
+
+  <span class="bilingual-text has-en nav-bilingual">
+    <span class="lang-zh">首页</span>
+    <span class="lang-en">Home</span>
+  </span>
+
+
+        </a>
+      
+        
+        <a class="nav-link is-active" href="/notes/" >
+          
+
+  <span class="bilingual-text has-en nav-bilingual">
+    <span class="lang-zh">笔记</span>
+    <span class="lang-en">Notes</span>
+  </span>
+
+
+        </a>
+      
+        
+        <a class="nav-link " href="/gallery/" >
+          
+
+  <span class="bilingual-text has-en nav-bilingual">
+    <span class="lang-zh">影集</span>
+    <span class="lang-en">Gallery</span>
+  </span>
+
+
+        </a>
+      
+        
+        <a class="nav-link " href="/publ/" >
+          
+
+  <span class="bilingual-text has-en nav-bilingual">
+    <span class="lang-zh">论文</span>
+    <span class="lang-en">Papers</span>
+  </span>
+
+
+        </a>
+      
+        
+        <a class="nav-link " href="https://github.com/ymd-physics" target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;>
+          
+
+  <span class="bilingual-text is-single nav-bilingual">
+    <span class="lang-zh">GitHub</span>
+    
+  </span>
+
+
+        </a>
+      
+        
+        <a class="nav-link " href="mailto:dingyiming@westlake.edu.cn" target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;>
+          
+
+  <span class="bilingual-text has-en nav-bilingual">
+    <span class="lang-zh">邮件</span>
+    <span class="lang-en">Email</span>
+  </span>
+
+
+        </a>
+      
+    </nav>
+  </div>
+</header>
+
+    <main class="site-main">
+      
+<article class="entry-panel page-panel">
+  <header class="entry-header">
+    
+      <h1>8. Vector, String, HashMap</h1>
+    
+  </header>
+  <div class="entry-content">
+    <h1 id="8-1-2-Vector"><a href="#8-1-2-Vector" class="headerlink" title="8.1-2 Vector"></a>8.1-2 Vector</h1><p>Vector是堆内存的数据结构，使用<code>Vec&lt;T&gt;</code>定义 （类似C++的STL中的<code>vector</code>）</p>
+<ul>
+<li>由标准库提供</li>
+<li>可存储多个值</li>
+<li>只能存储相同类型的数据</li>
+<li>值在内存中连续存放</li>
+</ul>
+<h2 id="初始化"><a href="#初始化" class="headerlink" title="初始化"></a>初始化</h2><p><strong>例子1</strong></p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">v</span>: <span class="type">Vec</span>&lt;<span class="type">i32</span>&gt; = <span class="type">Vec</span>::<span class="title function_ invoke__">new</span>();</span><br></pre></td></tr></table></figure>
+
+<p>事实上，这里不指定<code>v</code>的类型也可以，当Vector插入第一个元素的时候，编译器会根据该元素推断</p>
+<p><strong>例子2</strong></p>
+<p>在使用一些指定初始值创建Vector时，可以使用<code>vec!</code>这个宏，如</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">v</span> = <span class="built_in">vec!</span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>];</span><br></pre></td></tr></table></figure>
+
+<h2 id="Push元素"><a href="#Push元素" class="headerlink" title="Push元素"></a>Push元素</h2><p>与C++的<code>std::vector</code>类似：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">v.<span class="title function_ invoke__">push</span>(<span class="number">1</span>);</span><br><span class="line">v.<span class="title function_ invoke__">push</span>(<span class="number">2</span>);</span><br><span class="line">v.<span class="title function_ invoke__">push</span>(<span class="number">3</span>);</span><br></pre></td></tr></table></figure>
+
+<h2 id="删除Vector"><a href="#删除Vector" class="headerlink" title="删除Vector"></a>删除Vector</h2><p>与struct等类似，当其离开作用域，将会连同内部元素被一同清理</p>
+<h2 id="读取Vector的元素"><a href="#读取Vector的元素" class="headerlink" title="读取Vector的元素"></a>读取Vector的元素</h2><p>有两种方式可以读取Vector的元素，索引和<code>get</code>方法，例如</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">v</span>: <span class="type">Vec</span>&lt;<span class="type">i32</span>&gt; = <span class="built_in">vec!</span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>];</span><br><span class="line"><span class="keyword">let</span> <span class="variable">third</span> = &amp;v[<span class="number">2</span>];</span><br><span class="line"><span class="built_in">println!</span>(<span class="string">&quot;The third element is &#123;&#125;&quot;</span>, third);</span><br><span class="line"></span><br><span class="line"><span class="keyword">match</span> v.<span class="title function_ invoke__">get</span>(<span class="number">2</span>) &#123;</span><br><span class="line">  <span class="title function_ invoke__">Some</span>(third) =&gt; <span class="built_in">println!</span>(<span class="string">&quot;The third element is &#123;&#125;&quot;</span>, third),</span><br><span class="line">  <span class="literal">None</span> =&gt; <span class="built_in">println!</span>(<span class="string">&quot;There is no third element&quot;</span>),</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在处理越界问题时，</p>
+<ul>
+<li>索引会使程序panic并终止</li>
+<li><code>get</code>则返回<code>None</code></li>
+</ul>
+<p>这方便我们根据需求选择读取方式</p>
+<h2 id="所有权和借用规则"><a href="#所有权和借用规则" class="headerlink" title="所有权和借用规则"></a>所有权和借用规则</h2><p>前面提到过的规则对于Vector也适用，例如</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">v</span>: <span class="type">Vec</span>&lt;<span class="type">i32</span>&gt; = <span class="built_in">vec!</span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>];</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">third</span> = &amp;v[<span class="number">2</span>];		<span class="comment">// immutable borrow</span></span><br><span class="line">    v.<span class="title function_ invoke__">push</span>(<span class="number">4</span>);		<span class="comment">// mutable borrow</span></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;The third element is &#123;&#125;&quot;</span>, third);	<span class="comment">// immutable borrow</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>会报错，因为不能同时出现可变借用和不可变借用</p>
+<ul>
+<li>其中<code>push(&amp;mut self, value: T)</code>函数是定义在可变借用上</li>
+</ul>
+<p>在底层原理上，这么设计的原因是：</p>
+<ul>
+<li>假如现在需要向某个Vector添加元素，但是原始的内存块长度不够了，需要在另一个地方重新寻找内存块来创建新Vector，这就会导致不可变借用依然指向旧的地址，从而出现错误</li>
+</ul>
+<h2 id="遍历Vector"><a href="#遍历Vector" class="headerlink" title="遍历Vector"></a>遍历Vector</h2><p>对于不可变引用：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">v</span>: <span class="type">Vec</span>&lt;<span class="type">i32</span>&gt; = <span class="built_in">vec!</span>[<span class="number">3</span>, <span class="number">2</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">1</span>];</span><br><span class="line">    <span class="keyword">for</span> <span class="variable">i</span> <span class="keyword">in</span> &amp;v &#123;</span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125;&quot;</span>, i);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>对于可变引用（例如修改数组元素）：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">v</span>: <span class="type">Vec</span>&lt;<span class="type">i32</span>&gt; = <span class="built_in">vec!</span>[<span class="number">3</span>, <span class="number">2</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">1</span>];</span><br><span class="line">    <span class="keyword">for</span> <span class="variable">i</span> <span class="keyword">in</span> &amp;<span class="keyword">mut</span> v &#123;</span><br><span class="line">        *i += <span class="number">50</span>;</span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125;&quot;</span>, i);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>其中<code>*</code>是解引用运算符</li>
+</ul>
+<h2 id="Vector存储“多种数据”"><a href="#Vector存储“多种数据”" class="headerlink" title="Vector存储“多种数据”"></a>Vector存储“多种数据”</h2><p>前面说过，Vector不能直接存储多种数据，但是可以借助enum来实现，例如</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">enum</span> <span class="title class_">SpreadsheetCell</span> &#123;</span><br><span class="line">    <span class="title function_ invoke__">Int</span>(<span class="type">i32</span>),</span><br><span class="line">    <span class="title function_ invoke__">Float</span>(<span class="type">f64</span>),</span><br><span class="line">    <span class="title function_ invoke__">Text</span>(<span class="type">String</span>),</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">   <span class="keyword">let</span> <span class="variable">row</span> = <span class="built_in">vec!</span>[</span><br><span class="line">       SpreadsheetCell::<span class="title function_ invoke__">Int</span>(<span class="number">3</span>),</span><br><span class="line">       SpreadsheetCell::<span class="title function_ invoke__">Text</span>(<span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;blue&quot;</span>)),</span><br><span class="line">       SpreadsheetCell::<span class="title function_ invoke__">Float</span>(<span class="number">10.12</span>),</span><br><span class="line">   ];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="8-3-4-String"><a href="#8-3-4-String" class="headerlink" title="8.3-4 String"></a>8.3-4 String</h1><p>字符串本质上是Byte的集合，并提供一些方法将Byte解析成文本</p>
+<p>在Rust的核心语言层面，只有一个字符串类型：</p>
+<ul>
+<li>字符串切片类型<code>str</code>或<code>&amp;str</code></li>
+</ul>
+<p>所谓的<code>String</code>类型则来自标准库而非核心语言</p>
+<ul>
+<li>可增长、可修改、可拥有</li>
+</ul>
+<p>在Rust中常说的字符串指的是<code>String</code>和<code>&amp;str</code>，它们都是UTF8编码</p>
+<p>此外，Rust标准库还提供了其它的字符串类型，例如<code>OsString, OsStr, CString, CStr</code>等等</p>
+<ul>
+<li>一般以<code>String</code>结尾的字符串是可获得所有权的</li>
+<li>一般以<code>Str</code>结尾的字符串是可借用的</li>
+</ul>
+<h2 id="创建一个字符串-String"><a href="#创建一个字符串-String" class="headerlink" title="创建一个字符串 (String)"></a>创建一个字符串 (String)</h2><p>创建空字符串：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">s</span> = <span class="type">String</span>::<span class="title function_ invoke__">new</span>();</span><br></pre></td></tr></table></figure>
+
+<p>从字面值创建一个字符串：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">data</span> = <span class="string">&quot;initial contents&quot;</span>;</span><br><span class="line"><span class="keyword">let</span> <span class="variable">s</span> = data.<span class="title function_ invoke__">to_string</span>();</span><br><span class="line"><span class="keyword">let</span> <span class="variable">s1</span> = <span class="string">&quot;initial contents&quot;</span>.<span class="title function_ invoke__">to_string</span>();</span><br><span class="line"><span class="keyword">let</span> <span class="variable">s2</span> = <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;initial contents&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>其中<code>to_string()</code>方法可以用于实现了Display trait的类型，包括字符串字面值</li>
+</ul>
+<h2 id="更新String"><a href="#更新String" class="headerlink" title="更新String"></a>更新String</h2><p>可以使用<code>push_str()</code>方法来拼接</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">s</span> = <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;foo&quot;</span>);</span><br><span class="line">s.<span class="title function_ invoke__">push_str</span>(<span class="string">&quot;bar&quot;</span>);</span><br><span class="line"><span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125;&quot;</span>, s);</span><br></pre></td></tr></table></figure>
+
+<p>其中<code>push_str(&amp;mut self, string: &amp;str)</code>不会获得字符串的所有权，例如我们也可以</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">s</span> = <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;foo&quot;</span>);</span><br><span class="line"><span class="keyword">let</span> <span class="variable">s1</span> = <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;bar&quot;</span>);</span><br><span class="line">s.<span class="title function_ invoke__">push_str</span>(&amp;s1);</span><br><span class="line"><span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125;&quot;</span>, s);</span><br></pre></td></tr></table></figure>
+
+<p>如果想增加增添字符，可以适用<code>push()</code>，例如</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">s</span> = <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;lo&quot;</span>);</span><br><span class="line">s.<span class="title function_ invoke__">push</span>(<span class="string">&#x27;l&#x27;</span>);</span><br><span class="line"><span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125;&quot;</span>,s);</span><br></pre></td></tr></table></figure>
+
+<h2 id="拼接的加法运算符"><a href="#拼接的加法运算符" class="headerlink" title="拼接的加法运算符"></a>拼接的加法运算符</h2><p>对于String，使用<code>+</code>连接字符串，会使用类似<code>fn add(self, s: &amp;str) -&gt; String &#123;...&#125;</code>的方法，例如</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">s1</span> = <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;hello&quot;</span>);</span><br><span class="line"><span class="keyword">let</span> <span class="variable">s2</span> = <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot; world&quot;</span>);</span><br><span class="line"><span class="keyword">let</span> <span class="variable">s3</span> = s1 + &amp;s2;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>其中<code>&amp;s2</code>是对<code>String</code>类型的引用，而<code>s1</code>在拼接操作之后将不可用，因为add函数会取得第一个参数的所有权</li>
+<li>此外，虽然<code>&amp;s2</code>不是<code>&amp;str</code>类型，但标准库的add方法使用了泛型，对其进行了解引用强制转换（deref coercion）</li>
+</ul>
+<h2 id="拼接的宏"><a href="#拼接的宏" class="headerlink" title="拼接的宏"></a>拼接的宏</h2><p>使用<code>format!</code>这个宏，可以连接多个字符串，例如</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">s1</span> = <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;tic&quot;</span>);</span><br><span class="line"><span class="keyword">let</span> <span class="variable">s2</span> = <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;tac&quot;</span>);</span><br><span class="line"><span class="keyword">let</span> <span class="variable">s3</span> = <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;toe&quot;</span>);</span><br><span class="line"><span class="keyword">let</span> <span class="variable">s3</span> = s1 + <span class="string">&quot;-&quot;</span> + &amp;s2 + <span class="string">&quot;-&quot;</span> + &amp;s3;</span><br></pre></td></tr></table></figure>
+
+<p>可以改写为</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">s</span> = <span class="built_in">format!</span>(<span class="string">&quot;&#123;&#125;-&#123;&#125;-&#123;&#125;&quot;</span>, s1, s2, s3);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>相比<code>+</code>，<code>format!</code>不会取得参数的所有权，因此这些参数之后可以继续使用</li>
+</ul>
+<h2 id="对String以索引形式访问"><a href="#对String以索引形式访问" class="headerlink" title="对String以索引形式访问"></a>对String以索引形式访问</h2><p>如果类似Vector那样访问String元素，例如</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">s1</span> = <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;hello&quot;</span>);</span><br><span class="line"><span class="keyword">let</span> <span class="variable">h</span> = s1[<span class="number">0</span>];</span><br></pre></td></tr></table></figure>
+
+<p>则会报错，因为String并没有实现index索引这个trait！</p>
+<ul>
+<li>这是因为String的底层是<code>Vec&lt;u8&gt;</code>的包装，而对于不同的语言，每个字符会对应不同的长度，从而引起问题，因此Rust便在设计上杜绝了这种使用方式</li>
+</ul>
+<h2 id="Bytes-Scalar-values-Grapheme-clusters"><a href="#Bytes-Scalar-values-Grapheme-clusters" class="headerlink" title="Bytes, Scalar values, Grapheme clusters"></a>Bytes, Scalar values, Grapheme clusters</h2><p>从字节角度来看待字符串：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">w</span> = <span class="string">&quot;東京駅&quot;</span>;</span><br><span class="line"><span class="keyword">for</span> <span class="variable">b</span> <span class="keyword">in</span> w.<span class="title function_ invoke__">bytes</span>() &#123;</span><br><span class="line">  <span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125;&quot;</span>, b);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>输出为</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">230</span><br><span class="line">157</span><br><span class="line">177</span><br><span class="line">228</span><br><span class="line">186</span><br><span class="line">172</span><br><span class="line">233</span><br><span class="line">167</span><br><span class="line">133</span><br></pre></td></tr></table></figure>
+
+<p>从标量值来看待字符串：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">w</span> = <span class="string">&quot;東京駅&quot;</span>;</span><br><span class="line"><span class="keyword">for</span> <span class="variable">b</span> <span class="keyword">in</span> w.<span class="title function_ invoke__">chars</span>() &#123;</span><br><span class="line">  <span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125;&quot;</span>, b);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>输出为</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">東</span><br><span class="line">京</span><br><span class="line">駅</span><br></pre></td></tr></table></figure>
+
+<p>对于最后一种Grapheme clusters的方法，需要借助第三方crate来实现，这里省略</p>
+<ul>
+<li>还有一个Rust不允许String进行索引的原因是<ul>
+<li>索引操作应当消耗O(1)时间</li>
+<li>但String需要遍历所有内容来查看有多少合法字符，因此无法保证O(1)</li>
+</ul>
+</li>
+</ul>
+<h2 id="切片String"><a href="#切片String" class="headerlink" title="切片String"></a>切片String</h2><p>不同语言的字符所占的字节不同，例如每个汉字占3个字节，因此</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">w</span> = <span class="string">&quot;東京駅&quot;</span>;</span><br><span class="line"><span class="keyword">let</span> <span class="variable">s</span> = &amp;w[<span class="number">0</span>..<span class="number">3</span>];</span><br><span class="line"><span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125;&quot;</span>, s);</span><br></pre></td></tr></table></figure>
+
+<p>将会拿到<code>東</code>这个字，若少于3个字节则会报错</p>
+<p>对于英文，则没有这个问题：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">w</span> = <span class="string">&quot;abcdefg&quot;</span>;</span><br><span class="line"><span class="keyword">let</span> <span class="variable">s</span> = &amp;w[<span class="number">0</span>..<span class="number">3</span>];</span><br></pre></td></tr></table></figure>
+
+<p>因此，在切割字符串时，必须注意字符边界，否则程序会panick</p>
+<h1 id="8-5-HashMap"><a href="#8-5-HashMap" class="headerlink" title="8.5 HashMap"></a>8.5 HashMap</h1><p>即哈希查找或哈希表，对于<code>HashMap&lt;K, V&gt;</code>，</p>
+<ul>
+<li><code>K</code>为key，即键</li>
+<li><code>V</code>为value，即值</li>
+</ul>
+<p>本部分暂略，回头补</p>
+
+  </div>
+</article>
+
+    </main>
+    <footer class="site-footer">
+  <div class="footer-inner">
+    
+    
+      <p class="footer-credit">This website is technically powered by the blog famework Hexo</p>
+    
+    
+      <p class="footer-credit">This page design was co-created by me and GPT-5.3-Codex.</p>
+    
+    
+      <p class="footer-credit"><em>The background image is Along the River During the Qingming Festival (清明上河图).</em></p>
+    
+    <p>&copy; 2023 Yi-Ming Ding</p>
+  </div>
+</footer>
+
+  </div>
+  <script src="/js/main.js"></script>
+</body>
+</html>

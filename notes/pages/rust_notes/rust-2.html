@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN">
+<head>
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>2. 如何写一个简单的猜数字程序 | Yi-Ming Ding</title>
+  <meta name="description" content="在留白与墨色之间，安放写作、研究与生活。">
+  
+  <meta name="theme-color" content="#f5f1e8">
+  
+  
+  <link rel="stylesheet" href="/css/style.css">
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body class="layout-page">
+  <div class="site-shell">
+    <div class="ink-wash ink-wash-left" aria-hidden="true"></div>
+    <div class="ink-wash ink-wash-right" aria-hidden="true"></div>
+    
+<header class="site-header">
+  <div class="masthead-frame">
+    <a class="brand-mark" href="/">
+      <span class="brand-seal">茗</span>
+      <span class="brand-copy">
+        <strong class="brand-name-en">Yi-Ming Ding</strong>
+        <small>靈明無著，物來順應。</small>
+      </span>
+    </a>
+
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" data-nav-toggle>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span class="sr-only">切换导航</span>
+    </button>
+
+    <nav class="site-nav" id="site-nav" aria-label="Primary">
+      
+        
+        <a class="nav-link " href="/" >
+          
+
+  <span class="bilingual-text has-en nav-bilingual">
+    <span class="lang-zh">首页</span>
+    <span class="lang-en">Home</span>
+  </span>
+
+
+        </a>
+      
+        
+        <a class="nav-link is-active" href="/notes/" >
+          
+
+  <span class="bilingual-text has-en nav-bilingual">
+    <span class="lang-zh">笔记</span>
+    <span class="lang-en">Notes</span>
+  </span>
+
+
+        </a>
+      
+        
+        <a class="nav-link " href="/gallery/" >
+          
+
+  <span class="bilingual-text has-en nav-bilingual">
+    <span class="lang-zh">影集</span>
+    <span class="lang-en">Gallery</span>
+  </span>
+
+
+        </a>
+      
+        
+        <a class="nav-link " href="/publ/" >
+          
+
+  <span class="bilingual-text has-en nav-bilingual">
+    <span class="lang-zh">论文</span>
+    <span class="lang-en">Papers</span>
+  </span>
+
+
+        </a>
+      
+        
+        <a class="nav-link " href="https://github.com/ymd-physics" target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;>
+          
+
+  <span class="bilingual-text is-single nav-bilingual">
+    <span class="lang-zh">GitHub</span>
+    
+  </span>
+
+
+        </a>
+      
+        
+        <a class="nav-link " href="mailto:dingyiming@westlake.edu.cn" target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;>
+          
+
+  <span class="bilingual-text has-en nav-bilingual">
+    <span class="lang-zh">邮件</span>
+    <span class="lang-en">Email</span>
+  </span>
+
+
+        </a>
+      
+    </nav>
+  </div>
+</header>
+
+    <main class="site-main">
+      
+<article class="entry-panel page-panel">
+  <header class="entry-header">
+    
+      <h1>2. 如何写一个简单的猜数字程序</h1>
+    
+  </header>
+  <div class="entry-content">
+    <h1 id="2-1-单次猜测"><a href="#2-1-单次猜测" class="headerlink" title="2.1 单次猜测"></a>2.1 单次猜测</h1><h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a><strong>代码</strong></h3><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> std::io;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;猜数游戏&quot;</span>);</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;请猜测一个数：&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">guess</span> = <span class="type">String</span>::<span class="title function_ invoke__">new</span>();</span><br><span class="line"></span><br><span class="line">    io::<span class="title function_ invoke__">stdin</span>().<span class="title function_ invoke__">read_line</span>(&amp;<span class="keyword">mut</span> guess).<span class="title function_ invoke__">expect</span>(<span class="string">&quot;无法读取行&quot;</span>);</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;你猜的数是: &#123;&#125;&quot;</span>, guess);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="解析"><a href="#解析" class="headerlink" title="解析"></a>解析</h3><ul>
+<li><p><code>std::io</code>代表调用标准库<code>std</code>中的<code>io</code>库，使用<code>use</code>命令</p>
+</li>
+<li><p>Rust中所有的变量都是默认<strong>不可变的（immutable）</strong>，例如</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">foo</span> = <span class="number">1</span>;</span><br><span class="line"><span class="keyword">let</span> <span class="variable">bar</span> = foo;</span><br></pre></td></tr></table></figure>
+
+<p>如果希望变量可变，则需要加上<code>mut</code>关键字</p>
+</li>
+<li><p>在Rust中，字符串类型为<code>String</code>，包含在标准库中，而<code>String::new()</code>返回字符串的一个新的实例，默认为UTF8编码的空的字符串</p>
+<ul>
+<li>这里的<code>::</code>和C++的含义不同，代表<code>new()</code>是<code>String</code>类型的一个关联函数，</li>
+<li>关联函数是针对类型的函数，而不是针对特定实例的函数</li>
+</ul>
+</li>
+<li><p>函数<code>stdin()</code>会返回<code>Stdin</code>类型的一个实例，而方法<code>read_line()</code>会获取用户的输入，并将输入存到字符串<code>guess</code>中</p>
+<ul>
+<li>该方法要求字符串必须是mutable的，因此需要<code>&amp;mut</code>关键字</li>
+<li>其中<code>&amp;</code>代表该参数是一个引用，引用的目的是在代码的不同地方访问同一块数据，即代表<code>&amp;mut guess</code>中的<code>guess</code>和前面定义的<code>guess</code>指向同一块数据</li>
+<li>此处方法的参数是要通过引用来传递的</li>
+</ul>
+</li>
+<li><p>方法<code>read_line()</code>的返回值为枚举类型<code>io::Result&lt;usize&gt;</code>，若读取成功，将返回<code>Ok</code>且其包含结果值；否则返回<code>Err</code>并附带失败原因。对于该枚举类型，其还定义了一些方法，例如此处使用的<code>expect()</code> </p>
+<ul>
+<li>若该实例<code>io::Result&lt;usize&gt;</code>返回<code>Err</code>，则<code>expect()</code>方法会中断当前程序，并显示传入的字符串信息</li>
+<li>否则，<code>expect()</code>方法会提取<code>Ok</code>中附加的值，并将该值作为结果返回给用户</li>
+</ul>
+</li>
+<li><p>最后一行<code>println!()</code>中的<code>&#123;&#125;</code>为占位符，类似Python中的<code>print()</code>，会被后面的变量替换作为输出</p>
+</li>
+</ul>
+<h1 id="2-2-生成神秘数字"><a href="#2-2-生成神秘数字" class="headerlink" title="2.2 生成神秘数字"></a>2.2 生成神秘数字</h1><p>Rust的标准库中没有提供生成随机数的功能，需要借助名为<code>Rand</code>的<a target="_blank" rel="noopener" href="https://crates.io/crates/rand">crate</a></p>
+<p>Rust中的crate分为两种</p>
+<ul>
+<li>二进制crate：可独立运行</li>
+<li>library crate：不能独立运行，即需要被调用，和项目一起生成二进制文件</li>
+</ul>
+<p>为了添加<code>Rand</code>这个crate的依赖，我们需要编辑<code>Cargo.toml</code>文件，并添加在&#96;&#96;&#96;&#96;[dependencies]&#96;&#96;&#96;模块下，例如</p>
+<figure class="highlight toml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[dependencies]</span></span><br><span class="line"><span class="attr">rand</span> = <span class="string">&quot;0.3.14&quot;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p><code>0.3.14</code>为版本号</p>
+</li>
+<li><p>如果写作<code>&quot;^0.3.14&quot;</code>，则<code>^</code>代表任何与公共API兼容的版本都可以</p>
+</li>
+</ul>
+<p>这个crate将在<code>cargo build</code>的时候进行下载，包括相关的依赖库</p>
+<hr>
+<p>为了保证代码的复现性，在首次进行build之后，会生成<code>Cargo.lock</code>文件，它会记录第一次build使对应的crate的版本信息（对应的小版本号的最新版，如<code>0.3.23</code>），即便后续修改<code>Cargo.toml</code>文件中对应库的版本再进行build操作，也不会更新库的版本</p>
+<p>换言之，只要<code>Cargo.lock</code>文件存在，Cargo将一直使用该文件中的库版本，直到运行<code>cargo update</code>命令，才会重新根据<code>Cargo.toml</code>中的版本来更新<code>Cargo.lock</code>中编译用的版本</p>
+<hr>
+<p>为了生成随机数，我们使用</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> rand::Rng;</span><br></pre></td></tr></table></figure>
+
+<p>其中<code>Rng</code>是<code>rand</code>这个库里的trait，类似其它语言中API，上面会定义很多方法</p>
+<ul>
+<li><code>Rng</code>这个trait里面定义了很多随机数生成器的方法</li>
+</ul>
+<p>为了生成随机数，我们使用语句</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">secrete_number</span> = rand::<span class="title function_ invoke__">thread_rng</span>().<span class="title function_ invoke__">gen_range</span>(<span class="number">1</span>..<span class="number">101</span>);</span><br></pre></td></tr></table></figure>
+
+<p>其中</p>
+<ul>
+<li>函数<code>thread_rng()</code>返回的是<code>ThreadRng</code>类型，该类型是一个随机数生成器，其位于本地线程空间，并通过操作系统来获取随机数种子</li>
+<li><code>gen_range()</code>是<code>Rng</code>这个trait定义的方法，会生成范围[1, 101)内的一个随机整数</li>
+</ul>
+<hr>
+<p>综上，我们修改后的最新完整代码为</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> std::io;</span><br><span class="line"><span class="keyword">use</span> rand::Rng;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;猜数游戏&quot;</span>);</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;请猜测一个数：&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">secrete_number</span> = rand::<span class="title function_ invoke__">thread_rng</span>().<span class="title function_ invoke__">gen_range</span>(<span class="number">1</span>..<span class="number">101</span>);</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;神秘数字是：&#123;&#125;&quot;</span>, secrete_number);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">guess</span> = <span class="type">String</span>::<span class="title function_ invoke__">new</span>();</span><br><span class="line"></span><br><span class="line">    io::<span class="title function_ invoke__">stdin</span>().<span class="title function_ invoke__">read_line</span>(&amp;<span class="keyword">mut</span> guess).<span class="title function_ invoke__">expect</span>(<span class="string">&quot;无法读取行&quot;</span>);</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;你猜的数是: &#123;&#125;&quot;</span>, guess);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="2-3-比大小"><a href="#2-3-比大小" class="headerlink" title="2.3 比大小"></a>2.3 比大小</h1><p>Rust在赋值时可以像C++的<code>auto</code>语句一样进行强类型推断，例如<code>let mut guess</code>可以通过右面表达式推断<code>guess</code>的静态类型要被声明成为<code>String</code>。</p>
+<p>至于随机数生成部分的代码，由于<code>i32</code>，<code>u32</code>，<code>u64</code>均满足该条件，若无更多信息被指定来用于类型推断，否则将默认指定为<code>i32</code>类型</p>
+<hr>
+<p>为了比较<code>secrete_number</code>和<code>guess</code>，我们需要先进行类型转换，即</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">guess</span>: <span class="type">u32</span> = guess.<span class="title function_ invoke__">trim</span>().<span class="title function_ invoke__">parse</span>().<span class="title function_ invoke__">expect</span>(<span class="string">&quot;请输入一个合法的数字！&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p><code>trim()</code>方法用于去掉字符串两端的空白，包括tab和回车</p>
+</li>
+<li><p><code>parse()</code>方法用于将其解析成<code>u32</code>类型，这个<code>u32</code>由等号前的对应关键字来指定，该解析可能会失败，例如传入<code>xyz</code>的时候</p>
+<ul>
+<li>为了处理这种情况，<code>parse()</code>方法会返回<code>Result</code>这个枚举类型</li>
+<li>和前面的<code>read_line()</code>方法类似，我们可以调用该返回类型的<code>expect()</code>方法来报错</li>
+</ul>
+</li>
+<li><p>这里的<code>guess: u32</code>是声明了一个新的<code>guess</code>且为<code>u32</code>类型，其会进行shadow操作，即它会覆盖前面出现的字符串类型的<code>guess</code>，且在其之后，程序调用的guess都是这个新定义的guess</p>
+</li>
+</ul>
+<hr>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">match</span> guess.<span class="title function_ invoke__">cmp</span>(&amp;secrete_number) &#123;</span><br><span class="line">        Ordering::Less =&gt;  <span class="built_in">println!</span>(<span class="string">&quot;Too small!&quot;</span>),</span><br><span class="line">        Ordering::Greater =&gt; <span class="built_in">println!</span>(<span class="string">&quot;Too big!&quot;</span>),</span><br><span class="line">        Ordering::Equal =&gt; <span class="built_in">println!</span>(<span class="string">&quot;You win!&quot;</span>),</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里引入名为<code>std::cmp::ordering</code>这一枚举类型，其有三个变体<code>Less</code>，<code>Greater</code>，<code>Equal</code></p>
+<p>此外，<code>match</code> 表达式后面跟多个arm（分支），如果<code>match</code>后面表达式的值可以和某个arm匹配，则执行对应语句</p>
+<p>在有这一比较的语句出现之后，编译器会将<code>secrete_number</code>解释称对应的<code>u32</code>类型，而不再是<code>i32</code>类型</p>
+<hr>
+<p>最终的完整代码为（注意开头的<code>use std::cmp::Ordering;</code>）</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> std::io;</span><br><span class="line"><span class="keyword">use</span> rand::Rng;</span><br><span class="line"><span class="keyword">use</span> std::cmp::Ordering;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;猜数游戏&quot;</span>);</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;请猜测一个数：&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">secrete_number</span> = rand::<span class="title function_ invoke__">thread_rng</span>().<span class="title function_ invoke__">gen_range</span>(<span class="number">1</span>..<span class="number">101</span>);</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;神秘数字是：&#123;&#125;&quot;</span>, secrete_number);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">guess</span> = <span class="type">String</span>::<span class="title function_ invoke__">new</span>();</span><br><span class="line">    io::<span class="title function_ invoke__">stdin</span>().<span class="title function_ invoke__">read_line</span>(&amp;<span class="keyword">mut</span> guess).<span class="title function_ invoke__">expect</span>(<span class="string">&quot;无法读取行&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">guess</span>: <span class="type">u32</span> = guess.<span class="title function_ invoke__">trim</span>().<span class="title function_ invoke__">parse</span>().<span class="title function_ invoke__">expect</span>(<span class="string">&quot;请输入一个合法的数字！&quot;</span>);</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;你猜的数是: &#123;&#125;&quot;</span>, guess);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">match</span> guess.<span class="title function_ invoke__">cmp</span>(&amp;secrete_number) &#123;</span><br><span class="line">        Ordering::Less =&gt;  <span class="built_in">println!</span>(<span class="string">&quot;Too small!&quot;</span>),</span><br><span class="line">        Ordering::Greater =&gt; <span class="built_in">println!</span>(<span class="string">&quot;Too big!&quot;</span>),</span><br><span class="line">        Ordering::Equal =&gt; <span class="built_in">println!</span>(<span class="string">&quot;You win!&quot;</span>),</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="2-4-允许多次猜测"><a href="#2-4-允许多次猜测" class="headerlink" title="2.4 允许多次猜测"></a>2.4 允许多次猜测</h1><p>为了允许多次猜测直至用户才对，需要实现一个无限循环，这将借助<code>loop</code>语句和<code>break</code>来跳出循环：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> std::io;</span><br><span class="line"><span class="keyword">use</span> rand::Rng;</span><br><span class="line"><span class="keyword">use</span> std::cmp::Ordering;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;猜数游戏&quot;</span>);</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;请猜测一个数：&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">secrete_number</span> = rand::<span class="title function_ invoke__">thread_rng</span>().<span class="title function_ invoke__">gen_range</span>(<span class="number">1</span>..<span class="number">101</span>);</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;神秘数字是：&#123;&#125;&quot;</span>, secrete_number);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">loop</span> &#123;</span><br><span class="line">        <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">guess</span> = <span class="type">String</span>::<span class="title function_ invoke__">new</span>();</span><br><span class="line">        io::<span class="title function_ invoke__">stdin</span>().<span class="title function_ invoke__">read_line</span>(&amp;<span class="keyword">mut</span> guess).<span class="title function_ invoke__">expect</span>(<span class="string">&quot;无法读取行&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">let</span> <span class="variable">guess</span>: <span class="type">u32</span> = guess.<span class="title function_ invoke__">trim</span>().<span class="title function_ invoke__">parse</span>().<span class="title function_ invoke__">expect</span>(<span class="string">&quot;请输入一个合法的数字！&quot;</span>);</span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;你猜的数是: &#123;&#125;&quot;</span>, guess);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">match</span> guess.<span class="title function_ invoke__">cmp</span>(&amp;secrete_number) &#123;</span><br><span class="line">            Ordering::Less =&gt;  <span class="built_in">println!</span>(<span class="string">&quot;Too small!&quot;</span>),</span><br><span class="line">            Ordering::Greater =&gt; <span class="built_in">println!</span>(<span class="string">&quot;Too big!&quot;</span>),</span><br><span class="line">            Ordering::Equal =&gt; &#123;</span><br><span class="line">                <span class="built_in">println!</span>(<span class="string">&quot;You win!&quot;</span>);</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+  </div>
+</article>
+
+    </main>
+    <footer class="site-footer">
+  <div class="footer-inner">
+    
+    
+      <p class="footer-credit">This website is technically powered by the blog famework Hexo</p>
+    
+    
+      <p class="footer-credit">This page design was co-created by me and GPT-5.3-Codex.</p>
+    
+    
+      <p class="footer-credit"><em>The background image is Along the River During the Qingming Festival (清明上河图).</em></p>
+    
+    <p>&copy; 2023 Yi-Ming Ding</p>
+  </div>
+</footer>
+
+  </div>
+  <script src="/js/main.js"></script>
+</body>
+</html>

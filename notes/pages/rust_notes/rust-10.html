@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN">
+<head>
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>10. 泛型、Trait与生命周期 | Yi-Ming Ding</title>
+  <meta name="description" content="在留白与墨色之间，安放写作、研究与生活。">
+  
+  <meta name="theme-color" content="#f5f1e8">
+  
+  
+  <link rel="stylesheet" href="/css/style.css">
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body class="layout-page">
+  <div class="site-shell">
+    <div class="ink-wash ink-wash-left" aria-hidden="true"></div>
+    <div class="ink-wash ink-wash-right" aria-hidden="true"></div>
+    
+<header class="site-header">
+  <div class="masthead-frame">
+    <a class="brand-mark" href="/">
+      <span class="brand-seal">茗</span>
+      <span class="brand-copy">
+        <strong class="brand-name-en">Yi-Ming Ding</strong>
+        <small>靈明無著，物來順應。</small>
+      </span>
+    </a>
+
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" data-nav-toggle>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span class="sr-only">切换导航</span>
+    </button>
+
+    <nav class="site-nav" id="site-nav" aria-label="Primary">
+      
+        
+        <a class="nav-link " href="/" >
+          
+
+  <span class="bilingual-text has-en nav-bilingual">
+    <span class="lang-zh">首页</span>
+    <span class="lang-en">Home</span>
+  </span>
+
+
+        </a>
+      
+        
+        <a class="nav-link is-active" href="/notes/" >
+          
+
+  <span class="bilingual-text has-en nav-bilingual">
+    <span class="lang-zh">笔记</span>
+    <span class="lang-en">Notes</span>
+  </span>
+
+
+        </a>
+      
+        
+        <a class="nav-link " href="/gallery/" >
+          
+
+  <span class="bilingual-text has-en nav-bilingual">
+    <span class="lang-zh">影集</span>
+    <span class="lang-en">Gallery</span>
+  </span>
+
+
+        </a>
+      
+        
+        <a class="nav-link " href="/publ/" >
+          
+
+  <span class="bilingual-text has-en nav-bilingual">
+    <span class="lang-zh">论文</span>
+    <span class="lang-en">Papers</span>
+  </span>
+
+
+        </a>
+      
+        
+        <a class="nav-link " href="https://github.com/ymd-physics" target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;>
+          
+
+  <span class="bilingual-text is-single nav-bilingual">
+    <span class="lang-zh">GitHub</span>
+    
+  </span>
+
+
+        </a>
+      
+        
+        <a class="nav-link " href="mailto:dingyiming@westlake.edu.cn" target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;>
+          
+
+  <span class="bilingual-text has-en nav-bilingual">
+    <span class="lang-zh">邮件</span>
+    <span class="lang-en">Email</span>
+  </span>
+
+
+        </a>
+      
+    </nav>
+  </div>
+</header>
+
+    <main class="site-main">
+      
+<article class="entry-panel page-panel">
+  <header class="entry-header">
+    
+      <h1>10. 泛型、Trait与生命周期</h1>
+    
+  </header>
+  <div class="entry-content">
+    <h1 id="10-1-提取函数消除重复"><a href="#10-1-提取函数消除重复" class="headerlink" title="10.1 提取函数消除重复"></a>10.1 提取函数消除重复</h1><p>对于如下的代码</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">num_list</span> = <span class="built_in">vec!</span>[<span class="number">34</span>, <span class="number">50</span>, <span class="number">25</span>, <span class="number">100</span>, <span class="number">65</span>];</span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">largest</span> = num_list[<span class="number">0</span>];</span><br><span class="line">    <span class="keyword">for</span> <span class="variable">num</span> <span class="keyword">in</span> num_list &#123;</span><br><span class="line">        <span class="keyword">if</span> num &gt; largest &#123;</span><br><span class="line">            largest = num;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;The largest number is &#123;&#125;&quot;</span>, largest);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">num_list</span> = <span class="built_in">vec!</span>[<span class="number">123</span>, <span class="number">4523</span>, <span class="number">42</span>, <span class="number">992</span>, <span class="number">6000</span>];</span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">largest</span> = num_list[<span class="number">0</span>];</span><br><span class="line">    <span class="keyword">for</span> <span class="variable">num</span> <span class="keyword">in</span> num_list &#123;</span><br><span class="line">        <span class="keyword">if</span> num &gt; largest &#123;</span><br><span class="line">            largest = num;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;The largest number is &#123;&#125;&quot;</span>, largest);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们可以定义函数</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">largest</span>(list: &amp;[<span class="type">i32</span>]) <span class="punctuation">-&gt;</span> <span class="type">i32</span> &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">largest</span> = list[<span class="number">0</span>];</span><br><span class="line">    <span class="keyword">for</span> &amp;item <span class="keyword">in</span> list &#123;</span><br><span class="line">        <span class="keyword">if</span> item &gt; largest &#123;</span><br><span class="line">            largest = item;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    largest</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">num_list</span> = <span class="built_in">vec!</span>[<span class="number">34</span>, <span class="number">50</span>, <span class="number">25</span>, <span class="number">100</span>, <span class="number">65</span>];</span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">result</span> = <span class="title function_ invoke__">largest</span>(&amp;num_list);</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;The largest number is &#123;&#125;&quot;</span>, result);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">num_list</span> = <span class="built_in">vec!</span>[<span class="number">123</span>, <span class="number">4523</span>, <span class="number">42</span>, <span class="number">992</span>, <span class="number">6000</span>];</span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">result</span> = <span class="title function_ invoke__">largest</span>(&amp;num_list);</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;The largest number is &#123;&#125;&quot;</span>, result);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>来消除其中的重复部分</p>
+<h1 id="10-2-泛型"><a href="#10-2-泛型" class="headerlink" title="10.2 泛型"></a>10.2 泛型</h1><p><strong>泛型</strong>是具体类型或其它属性的抽象代替，能够提高代码的复用能力，相当于C++里的模板</p>
+<h2 id="函数中的泛型"><a href="#函数中的泛型" class="headerlink" title="函数中的泛型"></a>函数中的泛型</h2><p>例如，如果我们希望上一节定义的函数还能用于更多类型的比较，可以定义</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">largest</span>&lt;T&gt;(list: &amp;[T]) <span class="punctuation">-&gt;</span> T &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">largest</span> = list[<span class="number">0</span>];</span><br><span class="line">    <span class="keyword">for</span> &amp;item <span class="keyword">in</span> list &#123;</span><br><span class="line">        <span class="keyword">if</span> item &gt; largest &#123;</span><br><span class="line">            largest = item;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    largest</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>其中<code>T</code>即为占位符，会在编译时被替换成具体的类型</li>
+<li>Rust中的类型命名一般用CamelCase</li>
+</ul>
+<p>事实上，上面的代码会编译不通过，因为不是所有的类型<code>T</code>都实现了<code>std::cmp::PartialOrd</code>这个trait，即不一定可以用于比较。我们需要额外指定这个泛型参数需要拥有的trait，这一点我们将在后面介绍</p>
+<h2 id="结构体中的泛型"><a href="#结构体中的泛型" class="headerlink" title="结构体中的泛型"></a>结构体中的泛型</h2><p>类似地，我们还可以在结构体里使用泛型，例如</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">Point</span>&lt;T&gt; &#123;</span><br><span class="line">    x: T,</span><br><span class="line">    y: T, </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">integer</span> = Point &#123; x: <span class="number">5</span>, y: <span class="number">10</span> &#125;;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">float</span> = Point &#123; x: <span class="number">1.0</span>, y: <span class="number">4.0</span> &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>更进一步，如果希望<code>x</code>和<code>y</code>是不同的类型，可以定义</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">Point</span>&lt;T1, T2&gt; &#123;</span><br><span class="line">    x: T1,</span><br><span class="line">    y: T2,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="枚举中的泛型"><a href="#枚举中的泛型" class="headerlink" title="枚举中的泛型"></a>枚举中的泛型</h2><p>同样，我们也可以在enum中使用泛型，例如</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">enum</span> <span class="title class_">Option</span>&lt;T&gt; &#123;</span><br><span class="line">    <span class="title function_ invoke__">Some</span>(T),</span><br><span class="line">    <span class="literal">None</span>,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">enum</span> <span class="title class_">Result</span>&lt;T, E&gt; &#123;</span><br><span class="line">    <span class="title function_ invoke__">Ok</span>(T),</span><br><span class="line">    <span class="title function_ invoke__">Err</span>(E),</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>其中<code>Option&lt;T&gt;</code>是我们之前接触过的枚举类型</li>
+</ul>
+<h2 id="方法中的泛型"><a href="#方法中的泛型" class="headerlink" title="方法中的泛型"></a>方法中的泛型</h2><p>示例：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">Point</span>&lt;T, U&gt; &#123;</span><br><span class="line">    x: T,</span><br><span class="line">    y: U,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">impl</span>&lt;T, U&gt; Point&lt;T, U&gt; &#123;</span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">mixup</span>&lt;V, W&gt;(<span class="keyword">self</span>, other: Point&lt;V, W&gt;) <span class="punctuation">-&gt;</span> Point&lt;T, W&gt; &#123;</span><br><span class="line">        Point &#123;</span><br><span class="line">            x: <span class="keyword">self</span>.x,</span><br><span class="line">            y: other.y</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>这里的<code>&lt;T, U&gt;</code>和<code>&lt;V, W&gt;</code>不必相同</li>
+</ul>
+<h2 id="泛型代码的性能"><a href="#泛型代码的性能" class="headerlink" title="泛型代码的性能"></a>泛型代码的性能</h2><p>泛型代码的性能和使用具体类型的代码运行速度是相同的</p>
+<ul>
+<li>这是因为Rust使用了单态化（monomorphization），其将泛型替换成具体类型</li>
+</ul>
+<h1 id="10-3-4-Trait"><a href="#10-3-4-Trait" class="headerlink" title="10.3-4 Trait"></a>10.3-4 Trait</h1><p>Trait定义的是一些抽象的共享行为，它会告诉编译器，某些类型有哪些和其它类型共享的功能</p>
+<ul>
+<li>和其他语言的interface类似，但有点区别sd</li>
+<li>类似于C++的纯虚函数</li>
+</ul>
+<h2 id="定义一个trait"><a href="#定义一个trait" class="headerlink" title="定义一个trait"></a>定义一个trait</h2><p>Trait把方法的签名都放在一起，来定义实现某种目的所必须的一组行为</p>
+<ul>
+<li>使用<code>trait</code>关键字</li>
+<li>其只有方法签名，没有具体实现</li>
+<li>trait可以有多个方法，每个方法签名占一行，并以<code>;</code>结尾</li>
+<li>如果一个类型要实现这个trait，那么其必须提供具体的方法实现</li>
+</ul>
+<p>以下便定义了一个trait：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">pub</span> <span class="keyword">trait</span> <span class="title class_">Summary</span> &#123;</span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">summarize</span>(&amp;<span class="keyword">self</span>) <span class="punctuation">-&gt;</span> <span class="type">String</span>;</span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">summarize_default</span>(&amp;<span class="keyword">self</span>) <span class="punctuation">-&gt;</span> <span class="type">String</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>暂略（除了封装，QMC模拟应该用不到trait）</p>
+<h1 id="10-5-生命周期（一）"><a href="#10-5-生命周期（一）" class="headerlink" title="10.5 生命周期（一）"></a>10.5 生命周期（一）</h1><p>Rust的每个引用都有生命周期（保持有效的作用域）</p>
+<ul>
+<li>大多数情况下，生命周期是隐式的、可推断的</li>
+<li>当引用的生命周期可能以不同的方式互相关联时，手动标注生命周期</li>
+<li>其主要目标是避免悬垂引用</li>
+</ul>
+<p>一个简单的例子为</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">let</span> <span class="variable">r</span>;</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">let</span> <span class="variable">x</span> = <span class="number">5</span>;</span><br><span class="line">            r = &amp;x;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;r: &#123;&#125;&quot;</span>, r);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>花括号对会标明一个作用域</li>
+<li>在内部的花括号结束时，<code>x</code>的lifetime就结束了，因此borrow是无效的</li>
+</ul>
+<h2 id="手动标记生命周期"><a href="#手动标记生命周期" class="headerlink" title="手动标记生命周期"></a>手动标记生命周期</h2><p>定义下面的比较字符串长短的函数</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">longest</span>(x: &amp;<span class="type">str</span>, y: &amp;<span class="type">str</span>) <span class="punctuation">-&gt;</span> &amp;<span class="type">str</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> x.<span class="title function_ invoke__">len</span>() &gt; y.<span class="title function_ invoke__">len</span>() &#123;</span><br><span class="line">        x</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        y</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">string1</span> = <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;abcd&quot;</span>);</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">string2</span> = <span class="string">&quot;xyz&quot;</span>;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">result</span> = <span class="title function_ invoke__">longest</span>(string1.<span class="title function_ invoke__">as_str</span>(), string2);</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;The longest string is &#123;&#125;&quot;</span>, result);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>则编译器会报错，因为返回值的地方缺少一个命名的lifetime标注</p>
+<ul>
+<li>函数的返回类型包含了借用的值，但没有声明是来自<code>x</code>还是<code>y</code>，而且我们也不知道<code>x</code>和<code>y</code>的生命周期</li>
+</ul>
+<p>为了解决这个问题，我们需要用泛型来在函数签名中指定对应的生命周期：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">longest</span>&lt;<span class="symbol">&#x27;a</span>&gt;(x: &amp;<span class="symbol">&#x27;a</span> <span class="type">str</span>, y: &amp;<span class="symbol">&#x27;a</span> <span class="type">str</span>) <span class="punctuation">-&gt;</span> &amp;<span class="symbol">&#x27;a</span> <span class="type">str</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> x.<span class="title function_ invoke__">len</span>() &gt; y.<span class="title function_ invoke__">len</span>() &#123;</span><br><span class="line">        x</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        y</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="10-6-生命周期（二）"><a href="#10-6-生命周期（二）" class="headerlink" title="10.6 生命周期（二）"></a>10.6 生命周期（二）</h1><p>生命周期的标注仅仅是在描述多个引用之间的生命周期的关系，不会影响生命周期本身</p>
+<p>生命周期的标注</p>
+<ul>
+<li><p>参数名</p>
+<ul>
+<li><p>以<code>&#39;</code>开头</p>
+</li>
+<li><p>通常小写且非常短，习惯上会使用<code>&#39;a</code></p>
+</li>
+</ul>
+</li>
+<li><p>标注位置</p>
+<ul>
+<li>在引用的<code>&amp;</code>后面</li>
+<li>使用空格将标注和引用类型分开</li>
+</ul>
+</li>
+</ul>
+<p>例如</p>
+<ul>
+<li><code>&amp;i32</code>是一个引用</li>
+<li><code>&amp;&#39;a i32</code>是一个带有显式生命周期的引用</li>
+<li><code>&amp;&#39;a mut i32</code>是一个带有显式生命周期的可变引用</li>
+</ul>
+<h2 id="函数签名中的生命周期标注"><a href="#函数签名中的生命周期标注" class="headerlink" title="函数签名中的生命周期标注"></a>函数签名中的生命周期标注</h2><p>泛型生命周期参数应当声明在函数名和参数列表之间的<code>&lt;&gt;</code>里面</p>
+<p>对于上一节的函数</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">longest</span>&lt;<span class="symbol">&#x27;a</span>&gt;(x: &amp;<span class="symbol">&#x27;a</span> <span class="type">str</span>, y: &amp;<span class="symbol">&#x27;a</span> <span class="type">str</span>) <span class="punctuation">-&gt;</span> &amp;<span class="symbol">&#x27;a</span> <span class="type">str</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> x.<span class="title function_ invoke__">len</span>() &gt; y.<span class="title function_ invoke__">len</span>() &#123;</span><br><span class="line">        x</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        y</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>它标明<code>x</code>和<code>y</code>的引用以及返回值的生命周期不可以短于<code>&#39;a</code></li>
+<li>当这个函数被调用的时候，实际的作用域将是<code>x</code>和<code>y</code>的作用域所重叠的部分</li>
+</ul>
+<p>在这种情况下，下面的代码也是正确的</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">string1</span> = <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;abcd&quot;</span>);</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">let</span> <span class="variable">string2</span> = <span class="string">&quot;xyz&quot;</span>;</span><br><span class="line">        <span class="keyword">let</span> <span class="variable">result</span> = <span class="title function_ invoke__">longest</span>(string1.<span class="title function_ invoke__">as_str</span>(), string2);</span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;The longest string is &#123;&#125;&quot;</span>, result);<span class="keyword">let</span> <span class="variable">string2</span> = <span class="string">&quot;xyz&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>因为这里的<code>string2</code>是字符串字面值，是静态生命周期，存活在整个程序运行期间</li>
+</ul>
+<hr>
+<p>类似地逻辑，下面的代码将会报错</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">string1</span> = <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;abcd&quot;</span>);</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">result</span>;</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">let</span> <span class="variable">string2</span> = <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;xyz&quot;</span>);</span><br><span class="line">        result = <span class="title function_ invoke__">longest</span>(string1.<span class="title function_ invoke__">as_str</span>(), string2.<span class="title function_ invoke__">as_str</span>());</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;The longest string is &#123;&#125;&quot;</span>, result);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>这里由于返回值可能是<code>string2</code>，但是<code>string2</code>的生命周期和<code>result</code>以及<code>string1</code>没办法交叠，因此会报错</li>
+</ul>
+<h1 id="10-7-生命周期（三）"><a href="#10-7-生命周期（三）" class="headerlink" title="10.7 生命周期（三）"></a>10.7 生命周期（三）</h1><p>我们指定生命周期的方式往往依赖于函数所做的事情，例如</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">longest</span>&lt;<span class="symbol">&#x27;a</span>&gt;(x: &amp;<span class="symbol">&#x27;a</span> <span class="type">str</span>, y: &amp;<span class="type">str</span>) <span class="punctuation">-&gt;</span> &amp;<span class="symbol">&#x27;a</span> <span class="type">str</span> &#123;</span><br><span class="line">    x</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>如果指定<code>a</code>作为返回值，那么就无需为<code>y</code>显式声明生命周期</li>
+</ul>
+<p>从函数返回引用时，返回类型的生命周期必须要与其中一个参数的生命周期匹配</p>
+<ul>
+<li>如果返回的引用没有指向任何参数，那么其只能引用函数内创建的值，从而出现悬垂引用（对应值在函数结束时生命周期就结束了）</li>
+</ul>
+<p>例如</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">get_string</span>&lt;<span class="symbol">&#x27;a</span>&gt;(x: &amp;<span class="symbol">&#x27;a</span> <span class="type">str</span>) <span class="punctuation">-&gt;</span> &amp;<span class="type">str</span> &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">s</span> = <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;abc&quot;</span>);</span><br><span class="line">    s.<span class="title function_ invoke__">as_str</span>()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>会造成悬垂引用</p>
+<p>为了实现上面的功能，我们可以转交所有权，即</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">get_string</span>&lt;<span class="symbol">&#x27;a</span>&gt;(x: &amp;<span class="symbol">&#x27;a</span> <span class="type">str</span>) <span class="punctuation">-&gt;</span> <span class="type">String</span> &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">s</span> = <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;abc&quot;</span>);</span><br><span class="line">    s</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Struct定义中的生命周期标注"><a href="#Struct定义中的生命周期标注" class="headerlink" title="Struct定义中的生命周期标注"></a>Struct定义中的生命周期标注</h2><p>之前考虑的结构体字段都是自持有类型，而结构体也可以包含引用类型，需要标注生命周期</p>
+<p>例如</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">ImportantExcerpt</span>&lt;<span class="symbol">&#x27;a</span>&gt; &#123;</span><br><span class="line">    part: &amp;<span class="symbol">&#x27;a</span> <span class="type">str</span>,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">novel</span> = <span class="type">String</span>::<span class="title function_ invoke__">from</span>(<span class="string">&quot;Call me Ishmael. Some years ago...&quot;</span>);</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">first_sentence</span> = novel.<span class="title function_ invoke__">split</span>(<span class="string">&#x27;.&#x27;</span>)</span><br><span class="line">        .<span class="title function_ invoke__">next</span>()</span><br><span class="line">        .<span class="title function_ invoke__">expect</span>(<span class="string">&quot;Could not find a &#x27;.&#x27;&quot;</span>);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">let</span> <span class="variable">i</span> = ImportantExcerpt &#123; part: first_sentence &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>是正确的。我们需要保证实例的生命周期大于等于内部引用的字段的生命周期</p>
+<h2 id="生命周期的省略"><a href="#生命周期的省略" class="headerlink" title="生命周期的省略"></a>生命周期的省略</h2><p>对于一些编译器能推断的场景，无需显式标明生命周期</p>
+<p>不过，如果在编译器允许的规则下，不标注生命周期可能会带来模糊不清的问题，此时需要标注才能保证编译通过</p>
+<hr>
+<p><strong>生命周期省略的三个规则（对<code>fn</code>和<code>impl</code>都适用）</strong></p>
+<ul>
+<li><p>对于输入生命周期：</p>
+<ul>
+<li>每个引用类型的参数都有自己的生命周期（即单参数默认一个生命周期，双参数默认两个）</li>
+</ul>
+</li>
+<li><p>对于输出生命周期：</p>
+<ul>
+<li><p>如果只有一个输入生命周期参数，则其会被赋给所有输出生命周期参数</p>
+</li>
+<li><p>在有多个输入生命周期时，若其中一个是<code>&amp;self</code>或者<code>&amp;mut self</code>，则<code>self</code>的生命周期会被赋给所有输出生命周期</p>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id="10-8-生命周期（四）"><a href="#10-8-生命周期（四）" class="headerlink" title="10.8 生命周期（四）"></a>10.8 生命周期（四）</h1><p>在Rust中，有一个特殊的生命周期<code>&#39;static</code>，其存活在整个程序的持续期间</p>
+<p>例如，所有的字符串字面值都有着<code>&#39;static</code>的生命周期：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">s</span>: &amp;<span class="symbol">&#x27;static</span> <span class="type">str</span> = <span class="string">&quot;I have a static lifetime.&quot;</span>;</span><br></pre></td></tr></table></figure>
+
+<p>在使用<code>&#39;static</code>生命周期上，需要考虑</p>
+<ul>
+<li>该引用是否需要在整个程序期间存活</li>
+</ul>
+
+  </div>
+</article>
+
+    </main>
+    <footer class="site-footer">
+  <div class="footer-inner">
+    
+    
+      <p class="footer-credit">This website is technically powered by the blog famework Hexo</p>
+    
+    
+      <p class="footer-credit">This page design was co-created by me and GPT-5.3-Codex.</p>
+    
+    
+      <p class="footer-credit"><em>The background image is Along the River During the Qingming Festival (清明上河图).</em></p>
+    
+    <p>&copy; 2023 Yi-Ming Ding</p>
+  </div>
+</footer>
+
+  </div>
+  <script src="/js/main.js"></script>
+</body>
+</html>

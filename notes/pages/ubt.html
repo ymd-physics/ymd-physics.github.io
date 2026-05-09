@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN">
+<head>
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ubuntu-22.04配置笔记 | Yi-Ming Ding</title>
+  <meta name="description" content="在留白与墨色之间，安放写作、研究与生活。">
+  
+  <meta name="theme-color" content="#f5f1e8">
+  
+  
+  <link rel="stylesheet" href="/css/style.css">
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body class="layout-page">
+  <div class="site-shell">
+    <div class="ink-wash ink-wash-left" aria-hidden="true"></div>
+    <div class="ink-wash ink-wash-right" aria-hidden="true"></div>
+    
+<header class="site-header">
+  <div class="masthead-frame">
+    <a class="brand-mark" href="/">
+      <span class="brand-seal">茗</span>
+      <span class="brand-copy">
+        <strong class="brand-name-en">Yi-Ming Ding</strong>
+        <small>靈明無著，物來順應。</small>
+      </span>
+    </a>
+
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" data-nav-toggle>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span class="sr-only">切换导航</span>
+    </button>
+
+    <nav class="site-nav" id="site-nav" aria-label="Primary">
+      
+        
+        <a class="nav-link " href="/" >
+          
+
+  <span class="bilingual-text has-en nav-bilingual">
+    <span class="lang-zh">首页</span>
+    <span class="lang-en">Home</span>
+  </span>
+
+
+        </a>
+      
+        
+        <a class="nav-link is-active" href="/notes/" >
+          
+
+  <span class="bilingual-text has-en nav-bilingual">
+    <span class="lang-zh">笔记</span>
+    <span class="lang-en">Notes</span>
+  </span>
+
+
+        </a>
+      
+        
+        <a class="nav-link " href="/gallery/" >
+          
+
+  <span class="bilingual-text has-en nav-bilingual">
+    <span class="lang-zh">影集</span>
+    <span class="lang-en">Gallery</span>
+  </span>
+
+
+        </a>
+      
+        
+        <a class="nav-link " href="/publ/" >
+          
+
+  <span class="bilingual-text has-en nav-bilingual">
+    <span class="lang-zh">论文</span>
+    <span class="lang-en">Papers</span>
+  </span>
+
+
+        </a>
+      
+        
+        <a class="nav-link " href="https://github.com/ymd-physics" target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;>
+          
+
+  <span class="bilingual-text is-single nav-bilingual">
+    <span class="lang-zh">GitHub</span>
+    
+  </span>
+
+
+        </a>
+      
+        
+        <a class="nav-link " href="mailto:dingyiming@westlake.edu.cn" target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;>
+          
+
+  <span class="bilingual-text has-en nav-bilingual">
+    <span class="lang-zh">邮件</span>
+    <span class="lang-en">Email</span>
+  </span>
+
+
+        </a>
+      
+    </nav>
+  </div>
+</header>
+
+    <main class="site-main">
+      
+<article class="entry-panel page-panel">
+  <header class="entry-header">
+    
+      <h1>Ubuntu-22.04配置笔记</h1>
+    
+  </header>
+  <div class="entry-content">
+    <p><em><u>Updated on April 26, 2023</u></em></p>
+<h2 id="I-设备信息与双系统安装"><a href="#I-设备信息与双系统安装" class="headerlink" title="I. 设备信息与双系统安装"></a>I. 设备信息与双系统安装</h2><p><strong>联想拯救者Y9000P (2023)：</strong></p>
+<table>
+<thead>
+<tr>
+<th>硬件</th>
+<th>型号</th>
+<th>参数</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>CPU</td>
+<td><a target="_blank" rel="noopener" href="https://www.techpowerup.com/cpu-specs/core-i9-13900hx.c3018">Intel Core i9-13900HX</a></td>
+<td>16G 24核 32线程</td>
+</tr>
+<tr>
+<td>GPU</td>
+<td><a target="_blank" rel="noopener" href="https://www.techpowerup.com/gpu-specs/geforce-rtx-4060-max-q.c3986">NVIDIA GeForce RTX 4060 Max-Q</a></td>
+<td>8G 3072核</td>
+</tr>
+</tbody></table>
+<ul>
+<li><p>查看CPU名称：<code>cat /proc/cpuinfo | grep &#39;model name&#39; |uniq</code></p>
+</li>
+<li><p>查看CPU个数：<code>cat /proc/cpuinfo| grep &quot;physical id&quot;| sort| uniq| wc -l</code></p>
+</li>
+<li><p>查看CPU核心数：<code>cat /proc/cpuinfo | grep &quot;cpu cores&quot; | uniq</code></p>
+</li>
+<li><p>查看线程数：<code>cat /proc/cpuinfo | grep &quot;processor&quot; | sort -u | wc -l</code></p>
+</li>
+<li><p>查看内存大小及占用：<code>free -m</code></p>
+</li>
+</ul>
+<p><strong>双系统的安装：</strong>参考<a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1Yp4y1r7aA/?share_source=copy_web&vd_source=c3ddb3387ea446a12fb0f48c67482684">B站视频</a></p>
+<hr>
+<h2 id="II-基本工具安装"><a href="#II-基本工具安装" class="headerlink" title="II. 基本工具安装"></a>II. 基本工具安装</h2><h4 id="1-更新安装工具"><a href="#1-更新安装工具" class="headerlink" title="1. 更新安装工具"></a>1. 更新安装工具</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt-get update</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-安装GCC和相关依赖库"><a href="#2-安装GCC和相关依赖库" class="headerlink" title="2. 安装GCC和相关依赖库"></a>2. 安装GCC和相关依赖库</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt install build-essential</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-安装CMake"><a href="#3-安装CMake" class="headerlink" title="3. 安装CMake"></a>3. 安装CMake</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt-get install cmake</span><br></pre></td></tr></table></figure>
+
+<h4 id="4-安装ifconfig命令的依赖，用于查看IP"><a href="#4-安装ifconfig命令的依赖，用于查看IP" class="headerlink" title="4. 安装ifconfig命令的依赖，用于查看IP"></a>4. 安装<code>ifconfig</code>命令的依赖，用于查看IP</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt install net-tools</span><br></pre></td></tr></table></figure>
+
+<h4 id="5-安装SSH"><a href="#5-安装SSH" class="headerlink" title="5. 安装SSH"></a>5. 安装SSH</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt install ssh</span><br></pre></td></tr></table></figure>
+
+<h4 id="6-安装Vim编辑器"><a href="#6-安装Vim编辑器" class="headerlink" title="6. 安装Vim编辑器"></a>6. 安装Vim编辑器</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt-get install vim</span><br></pre></td></tr></table></figure>
+
+<h4 id="7-安装tree工具"><a href="#7-安装tree工具" class="headerlink" title="7. 安装tree工具"></a>7. 安装tree工具</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt-get install tree</span><br></pre></td></tr></table></figure>
+
+<h4 id="8-安装git工具"><a href="#8-安装git工具" class="headerlink" title="8. 安装git工具"></a>8. 安装git工具</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt-get install git</span><br></pre></td></tr></table></figure>
+
+<h4 id="9-安装pip3"><a href="#9-安装pip3" class="headerlink" title="9. 安装pip3"></a>9. 安装pip3</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt install python3-pip</span><br></pre></td></tr></table></figure>
+
+<p>对于无法用<code>apt-get</code>或<code>apt</code>命令安装的软件，一般需手动下载deb文件，这里以QQ的安装为例：</p>
+<p>在<a target="_blank" rel="noopener" href="https://im.qq.com/index/">QQ官网</a>下载对应的deb文件，如<code>linuxqq_3.1.1-11223_amd64.deb</code></p>
+<p>终端中使用<code>dpkg</code>命令来安装：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> dpkg -i linuxqq_3.1.1-11223_amd64.deb</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="III-SSH访问"><a href="#III-SSH访问" class="headerlink" title="III. SSH访问"></a>III. SSH访问</h2><h4 id="1-基本访问"><a href="#1-基本访问" class="headerlink" title="1. 基本访问"></a>1. 基本访问</h4><p><strong>使用SSH远程访问时，需保证「被访问设备和当前设备在同一局域网下」（内网穿透除外）</strong></p>
+<h6 id="a-终端输入ifconfig命令，可以看到类似如下的输出"><a href="#a-终端输入ifconfig命令，可以看到类似如下的输出" class="headerlink" title="(a) 终端输入ifconfig命令，可以看到类似如下的输出"></a>(a) 终端输入<code>ifconfig</code>命令，可以看到类似如下的输出</h6><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">wlp0s20f3: flags=4163&lt;UP,BROADCAST,RUNNING,MULTICAST&gt;  mtu 1500</span><br><span class="line">        inet 192.168.2.94  netmask 255.255.255.0  broadcast 192.168.2.255</span><br><span class="line">        inet6 fda2:8861:fa9c:2e00:31d6:3bb0:db54:490c  prefixlen 64  scopeid 0x0&lt;global&gt;</span><br><span class="line">        inet6 fe80::ec85:28a0:6630:cd18  prefixlen 64  scopeid 0x20&lt;<span class="built_in">link</span>&gt;</span><br><span class="line">        inet6 fda2:8861:fa9c:2e00:20d8:4eff:d0d8:94a6  prefixlen 64  scopeid 0x0&lt;global&gt;</span><br><span class="line">        ether 70:d8:23:49:b2:36  txqueuelen 1000  (Ethernet)</span><br><span class="line">        RX packets 689401  bytes 985074662 (985.0 MB)</span><br><span class="line">        RX errors 0  dropped 5  overruns 0  frame 0</span><br><span class="line">        TX packets 161665  bytes 18899855 (18.8 MB)</span><br><span class="line">        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0</span><br></pre></td></tr></table></figure>
+
+<p>其中<code>inet 192.168.2.94</code>后的数字即为IP地址；</p>
+<ul>
+<li>若访问失败，可在ubuntu图形界面的网络设置部分二次确认IP地址。</li>
+</ul>
+<h6 id="b-访问的语句形如"><a href="#b-访问的语句形如" class="headerlink" title="(b) 访问的语句形如"></a>(b) 访问的语句形如</h6><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh username@192.168.2.94</span><br></pre></td></tr></table></figure>
+
+<p>注意，如果被访问设备重装了系统，访问时会出现如下的报错</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@</span><br><span class="line">@    WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED!     @</span><br><span class="line">@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@</span><br></pre></td></tr></table></figure>
+
+<p>此时，需要输入命令</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen -R 192.168.2.94</span><br></pre></td></tr></table></figure>
+
+<p>随后便可正常访问</p>
+<h6 id="c-若要终止访问，输入"><a href="#c-若要终止访问，输入" class="headerlink" title="(c) 若要终止访问，输入"></a>(c) 若要终止访问，输入</h6><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">exit</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="2-设置远程端不休眠"><a href="#2-设置远程端不休眠" class="headerlink" title="2. 设置远程端不休眠"></a>2. 设置远程端不休眠</h4><p>这一部分参考<a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_44120025/article/details/123184263">CSDN文章</a></p>
+<h6 id="a-输入systemctl-status-sleep-target命令查看系统休眠状态："><a href="#a-输入systemctl-status-sleep-target命令查看系统休眠状态：" class="headerlink" title="(a) 输入systemctl status sleep.target命令查看系统休眠状态："></a>(a) 输入<code>systemctl status sleep.target</code>命令查看系统休眠状态：</h6><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">○ sleep.target - Sleep</span><br><span class="line">     Loaded: loaded (/lib/systemd/system/sleep.target; static)</span><br><span class="line">     Active: inactive (dead)</span><br><span class="line">       Docs: man:systemd.special(7)</span><br></pre></td></tr></table></figure>
+
+<p>如上述所示，若<code>Loaded</code>后面显示<code>loaded</code>，则会自动休眠，此时需要将其调整为<code>masked</code>状态。</p>
+<h6 id="b-使用命令sudo-systemctl-mask-sleep-target-suspend-target-hibernate-target-hybrid-sleep-target，"><a href="#b-使用命令sudo-systemctl-mask-sleep-target-suspend-target-hibernate-target-hybrid-sleep-target，" class="headerlink" title="(b) 使用命令sudo systemctl mask sleep.target suspend.target hibernate.target hybrid-sleep.target，"></a>(b) 使用命令<code>sudo systemctl mask sleep.target suspend.target hibernate.target hybrid-sleep.target</code>，</h6><p>随后再次用<code>systemctl status sleep.target</code>查看休眠状态，若看到其为<code>masked</code>，即已设置成功。</p>
+<h6 id="c-对于笔电，为防止合盖休眠等问题，先使用如下命令安装第三方软件："><a href="#c-对于笔电，为防止合盖休眠等问题，先使用如下命令安装第三方软件：" class="headerlink" title="(c) 对于笔电，为防止合盖休眠等问题，先使用如下命令安装第三方软件："></a>(c) 对于笔电，为防止合盖休眠等问题，先使用如下命令安装第三方软件：</h6><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt install gnome-tweaks</span><br></pre></td></tr></table></figure>
+
+<p>安装成功后，在图形界面使用<code>gnome-tweaks</code>命令运行该软件，会跳出一个窗口，在选项里选择取消「笔记本盖子关闭时挂起」的选项即可。</p>
+<hr>
+<h2 id="IV-CUDA配置"><a href="#IV-CUDA配置" class="headerlink" title="IV. CUDA配置"></a>IV. CUDA配置</h2><ul>
+<li><p>仅适用于搭载Nvidia显卡的机器</p>
+</li>
+<li><p>显卡官方算力数据：<a target="_blank" rel="noopener" href="https://developer.nvidia.com/cuda-gpus">link</a></p>
+</li>
+<li><p>GPU详细参数查询网站：<a target="_blank" rel="noopener" href="https://www.techpowerup.com/gpu-specs/">link</a></p>
+</li>
+</ul>
+<h4 id="1-显卡检测与BIOS设置"><a href="#1-显卡检测与BIOS设置" class="headerlink" title="1. 显卡检测与BIOS设置"></a>1. 显卡检测与BIOS设置</h4><p>使用命令<code>lspci | grep &#39;VGA&#39;</code>来查看显卡信息，输出诸如：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">00:02.0 VGA compatible controller: Intel Corporation Raptor Lake-S UHD Graphics (rev 04)</span><br><span class="line">01:00.0 VGA compatible controller: NVIDIA Corporation AD107M [GeForce RTX 4060 Max-Q / Mobile] (rev a1)</span><br></pre></td></tr></table></figure>
+
+<p>可以看到我的显卡为”GeForce RTX 4060 Max-Q &#x2F; Mobile”</p>
+<p>若检测不到，并输出形如</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">00:02.0 VGA compatible controller: Intel Corporation Device a788 (rev 04)</span><br><span class="line"> 01:00.0 VGA compatible controller: NVIDIA Corporation Device 28e0 (rev a1)</span><br></pre></td></tr></table></figure>
+<p>的信息，则可使用如下命令安装相关依赖</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> update-pciids</span><br></pre></td></tr></table></figure>
+
+<p>重启系统后即可</p>
+<p>笔记本如果同时启用了独显与核显的话，会导致CUDA的驱动安装失败。</p>
+<p>进入BIOS设置，并关闭混显：</p>
+<ol>
+<li>security – security boot，设置为disable</li>
+<li>configuration – graphics devices，设置为discrete graphic （即独显模式）</li>
+</ol>
+<p>这一部分参考<a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_44123583/article/details/115613758">CSDN文章</a></p>
+<p>联想拯救者系列进入BIOS的方法为：开机快速按<code>f2</code></p>
+<h4 id="2-预备工作"><a href="#2-预备工作" class="headerlink" title="2. 预备工作"></a>2. 预备工作</h4><ol>
+<li><p><strong>禁用nouveau（Ubuntu自带的驱动）</strong></p>
+<p>a) 用Vim打开如下文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> vim /etc/modprobe.d/blacklist.conf </span><br></pre></td></tr></table></figure>
+
+<p>b) 在文件末尾添加如下语句，随后保存</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">blacklist nouveau</span><br><span class="line">options nouveau modeset=0</span><br></pre></td></tr></table></figure>
+
+<p>c) 终端输入如下命令，随后重启电脑</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> update-initramfs -u</span><br></pre></td></tr></table></figure>
+
+<p>d) 输入如下命令，若无任何输出，则禁用成功</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lsmod | grep nouveau</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>安装lightdm（需要这个作为桌面显示管理器，因为后面要禁用原本的图形界面）</strong></p>
+</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt-get install lightdm</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-安装Toolkit与Driver"><a href="#3-安装Toolkit与Driver" class="headerlink" title="3. 安装Toolkit与Driver"></a>3. 安装Toolkit与Driver</h4><p>在安装Toolkit的同时，会自动安装匹配的Driver，因此选择直接安装Toolkit.</p>
+<p>由于这一部分的安装折腾了很多次才成功，并有重复存在，所以我无法保证我所记述的步骤100%有效，但大概率是没问题的。</p>
+<ol>
+<li><p>在<a target="_blank" rel="noopener" href="https://developer.nvidia.com/cuda-toolkit-archive">官网</a>选择想要安装的Toolkit版本（这里是12.1版本），并选择<code>Linux -- x86_64 -- Ubuntu --22.04 -- runfile (local)</code>，注意最后一个一定要选<code>runfile (local)</code>；</p>
+</li>
+<li><p>终端输入官网给的第一个链接，用以下载安装包，<strong>但先不要用第二个命令安装</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget https://developer.download.nvidia.com/compute/cuda/12.1.0/local_installers/cuda_12.1.0_530.30.02_linux.run</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>使用命令<code>sud</code>进入tty模式（这是为了关闭现有图形界面以安装驱动）。若进不去，则使用键盘按<code>ctrl + alt + f1</code>，其中<code>f1</code>可更换为<code>f2 ~ f6</code>中的一个；</p>
+</li>
+</ol>
+<ul>
+<li>注意：tty模式需要在本机上操作，不可远程ssh</li>
+</ul>
+<p>a. [tty模式] 输入用户名和密码；</p>
+<p>b. [tty模式] 输入如下命令以禁用X server</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> service lightdm stop</span><br></pre></td></tr></table></figure>
+
+<p>c. [tty模式] 进入刚刚下载好安装包的目录，赋予运行权限：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> <span class="built_in">chmod</span> +x cuda_12.1.0_530.30.02_linux.run</span><br></pre></td></tr></table></figure>
+
+<p>d. [tty模式] 运行安装文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> ./cuda_12.1.0_530.30.02_linux.run</span><br></pre></td></tr></table></figure>
+
+<p>e. [tty模式] 此时会进入安装界面，<strong>注意勾选Driver</strong>（一般是默认勾选），随后安装</p>
+<p>f. [tty模式] 安装成功后，使用如下命令返回图形界面</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> service lightdm restart</span><br></pre></td></tr></table></figure>
+
+<p>接着重启系统。</p>
+<p>若前述安装成功，则输入<code>nvidia-smi</code>命令，可以看到Driver的信息：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">+---------------------------------------------------------------------------------------+</span><br><span class="line">| NVIDIA-SMI 530.30.02              Driver Version: 530.30.02    CUDA Version: 12.1     |</span><br><span class="line">|-----------------------------------------+----------------------+----------------------+</span><br><span class="line">| GPU  Name                  Persistence-M| Bus-Id        Disp.A | Volatile Uncorr. ECC |</span><br><span class="line">| Fan  Temp  Perf            Pwr:Usage/Cap|         Memory-Usage | GPU-Util  Compute M. |</span><br><span class="line">|                                         |                      |               MIG M. |</span><br><span class="line">|=========================================+======================+======================|</span><br><span class="line">|   0  NVIDIA GeForce RTX 4060 L...    Off| 00000000:01:00.0 Off |                  N/A |</span><br><span class="line">| N/A   39C    P8                2W /  55W|    397MiB /  8188MiB |      0%      Default |</span><br><span class="line">|                                         |                      |                  N/A |</span><br><span class="line">+-----------------------------------------+----------------------+----------------------+</span><br><span class="line">                                                                                         </span><br><span class="line">+---------------------------------------------------------------------------------------+</span><br><span class="line">| Processes:                                                                            |</span><br><span class="line">|  GPU   GI   CI        PID   Type   Process name                            GPU Memory |</span><br><span class="line">|        ID   ID                                                             Usage      |</span><br><span class="line">|=======================================================================================|</span><br><span class="line">|    0   N/A  N/A      1027      G   /usr/lib/xorg/Xorg                          236MiB |</span><br><span class="line">|    0   N/A  N/A      1675      G   /usr/bin/gnome-shell                        158MiB |</span><br><span class="line">+---------------------------------------------------------------------------------------+</span><br></pre></td></tr></table></figure>
+
+<p>但此时用于查看Toolkit信息的<code>nvcc -V</code>命令还无法正常输出版本信息，这是因为还没有配置环境变量。</p>
+<h4 id="4-配置环境变量"><a href="#4-配置环境变量" class="headerlink" title="4. 配置环境变量"></a>4. 配置环境变量</h4><p>a) 打开<code>bashrc</code>文件：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim ~/.bashrc</span><br></pre></td></tr></table></figure>
+
+<p>b) 在文件末尾添加如下语句（注意安装的版本号）</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> PATH=/usr/local/cuda-12.1/bin<span class="variable">$&#123;PATH:+:<span class="variable">$&#123;PATH&#125;</span>&#125;</span></span><br><span class="line"><span class="built_in">export</span> LD_LIBRARY_PATH=/usr/local/cuda-12.1/lib64<span class="variable">$&#123;LD_LIBRARY_PATH:+:<span class="variable">$&#123;LD_LIBRARY_PATH&#125;</span>&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>c) 保存文件并在终端输入</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">source ~/.bashrc</span><br></pre></td></tr></table></figure>
+
+<p>以激活环境变量</p>
+<p>d) 此时再输入<code>nvcc -V</code>，即可看到正确的版本信息：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">nvcc: NVIDIA (R) Cuda compiler driver</span><br><span class="line">Copyright (c) 2005-2023 NVIDIA Corporation</span><br><span class="line">Built on Tue_Feb__7_19:32:13_PST_2023</span><br><span class="line">Cuda compilation tools, release 12.1, V12.1.66</span><br><span class="line">Build cuda_12.1.r12.1/compiler.32415258_0</span><br></pre></td></tr></table></figure>
+
+<h4 id="5-卸载"><a href="#5-卸载" class="headerlink" title="5. *卸载"></a>5. *卸载</h4><p>若要更换新版本的Driver和Toolkit，一般需要先卸载旧版本。</p>
+<p>a) 卸载Toolkit</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get --purge remove &quot;*cublas*&quot; &quot;cuda*&quot; &quot;nsight*&quot;</span><br></pre></td></tr></table></figure>
+
+<p>b) 卸载Driver</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get --purge remove &quot;*nvidia*&quot;</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="6-配置CuDNN"><a href="#6-配置CuDNN" class="headerlink" title="6. *配置CuDNN"></a>6. *配置CuDNN</h4><ul>
+<li>参考<a target="_blank" rel="noopener" href="https://blog.csdn.net/zhebushibiaoshifu/article/details/130848891">CSDN文章</a></li>
+</ul>
+<p>安装成功后可通过如下命令确认CuDNN版本</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /usr/include/</span><br><span class="line"><span class="built_in">cat</span> cudnn_version.h</span><br></pre></td></tr></table></figure>
+
+<p>可以看到我的版本为</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> CUDNN_MAJOR 8</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> CUDNN_MINOR 9</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> CUDNN_PATCHLEVEL 2</span></span><br></pre></td></tr></table></figure>
+
+<p>即8.9.2版本</p>
+<h4 id="7-Cupy安装"><a href="#7-Cupy安装" class="headerlink" title="7. *Cupy安装"></a>7. *Cupy安装</h4><p>在完成好前述的CUDA配置后，对于cuda toolkit的12.x版本，使用如下命令即可</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip3 install cupy-cuda12x</span><br></pre></td></tr></table></figure>
+
+<p>其它版本请参考<a target="_blank" rel="noopener" href="https://docs.cupy.dev/en/stable/install.html">官网</a></p>
+<h4 id="8-解决驱动突然无法显示的情况"><a href="#8-解决驱动突然无法显示的情况" class="headerlink" title="8. *解决驱动突然无法显示的情况"></a>8. *解决驱动突然无法显示的情况</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt-get install dkms</span><br><span class="line"><span class="built_in">sudo</span> dkms install -m nvidia -v 530.30.02</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="V-Conda配置"><a href="#V-Conda配置" class="headerlink" title="V) Conda配置"></a>V) Conda配置</h2><h4 id="1-在官网下载-sh安装文件，例如"><a href="#1-在官网下载-sh安装文件，例如" class="headerlink" title="1. 在官网下载.sh安装文件，例如"></a>1. 在<a target="_blank" rel="noopener" href="https://www.anaconda.com/products/distribution">官网</a>下载<code>.sh</code>安装文件，例如</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget https://repo.anaconda.com/archive/Anaconda3-2023.03-1-Linux-x86_64.sh</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-赋予可执行权限"><a href="#2-赋予可执行权限" class="headerlink" title="2. 赋予可执行权限"></a>2. 赋予可执行权限</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">chmod</span> +x ./Anaconda3-2023.03-Linux-x86_64.sh </span><br></pre></td></tr></table></figure>
+
+<h4 id="3-运行安装文件"><a href="#3-运行安装文件" class="headerlink" title="3. 运行安装文件"></a>3. 运行安装文件</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./Anaconda3-2023.03-Linux-x86_64.sh </span><br></pre></td></tr></table></figure>
+
+
+<ul>
+<li>注意：在安装的最后不要选择initialize conda！</li>
+</ul>
+<h4 id="4-安装成功后在vi-bashrc文件的末尾添加环境变量，随后使其立即生效"><a href="#4-安装成功后在vi-bashrc文件的末尾添加环境变量，随后使其立即生效" class="headerlink" title="4. 安装成功后在vi ~/.bashrc文件的末尾添加环境变量，随后使其立即生效"></a>4. 安装成功后在<code>vi ~/.bashrc</code>文件的末尾添加环境变量，随后使其立即生效</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> PATH=<span class="string">&quot;/home/ym/opt/anaconda3/bin:<span class="variable">$PATH</span>&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>e) 若配置成功，输入<code>conda -V</code>即可显示conda的版本信息</p>
+<hr>
+<h2 id="VI-一些C-计算库安装"><a href="#VI-一些C-计算库安装" class="headerlink" title="VI) 一些C++计算库安装"></a>VI) 一些C++计算库安装</h2><h4 id="1-安装OpenBLAS和LAPACK"><a href="#1-安装OpenBLAS和LAPACK" class="headerlink" title="1. 安装OpenBLAS和LAPACK"></a>1. 安装OpenBLAS和LAPACK</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt install libopenblas-dev liblapack-dev</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-安装OpenMP"><a href="#2-安装OpenMP" class="headerlink" title="2. 安装OpenMP"></a>2. 安装OpenMP</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt-get install libomp-dev</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="VII-修改ulimit"><a href="#VII-修改ulimit" class="headerlink" title="VII) 修改ulimit"></a>VII) 修改ulimit</h2><h4 id="1-打开如下文件"><a href="#1-打开如下文件" class="headerlink" title="1. 打开如下文件"></a>1. 打开如下文件</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> vim /etc/security/limits.conf</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-在文件中添加如下语句，随后保存"><a href="#2-在文件中添加如下语句，随后保存" class="headerlink" title="2. 在文件中添加如下语句，随后保存"></a>2. 在文件中添加如下语句，随后保存</h4><figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">* hard nofile 65535</span><br><span class="line">* soft nofile 65535</span><br><span class="line">root hard nofile 65535</span><br><span class="line">root soft nofile 65535</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-打开下面的文件"><a href="#3-打开下面的文件" class="headerlink" title="3. 打开下面的文件"></a>3. 打开下面的文件</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> vim /etc/pam.d/su</span><br></pre></td></tr></table></figure>
+
+<h4 id="4-注释掉下面的语句"><a href="#4-注释掉下面的语句" class="headerlink" title="4. 注释掉下面的语句"></a>4. 注释掉下面的语句</h4><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">session required pam_limits.so</span><br></pre></td></tr></table></figure>
+
+<h4 id="5-重启"><a href="#5-重启" class="headerlink" title="5. 重启"></a>5. 重启</h4><p>此时再输入<code>ulimit -n</code>，此时会显示为<code>65535</code></p>
+<hr>
+<h2 id="VIII-Vim个性化"><a href="#VIII-Vim个性化" class="headerlink" title="VIII) Vim个性化"></a>VIII) Vim个性化</h2><h4 id="1-在环境变量中用vi来命名vim"><a href="#1-在环境变量中用vi来命名vim" class="headerlink" title="1. 在环境变量中用vi来命名vim"></a>1. 在环境变量中用<code>vi</code>来命名<code>vim</code></h4><p>命令<code>vi ~/.bashrc </code>，添加：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">alias</span> vi=<span class="string">&#x27;vim&#x27;</span> </span><br></pre></td></tr></table></figure>
+
+<p>随后使其生效<code>source ~/.bashrc</code></p>
+<h4 id="2-打开Vim配置文件vi-vimrc，添加如下内容即可"><a href="#2-打开Vim配置文件vi-vimrc，添加如下内容即可" class="headerlink" title="2. 打开Vim配置文件vi ~/.vimrc，添加如下内容即可"></a>2. 打开Vim配置文件<code>vi ~/.vimrc</code>，添加如下内容即可</h4><ul>
+<li>参考<a target="_blank" rel="noopener" href="https://blog.csdn.net/sky619351517/article/details/77170615">CSDN文章</a></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;关闭vim一致性原则</span></span><br><span class="line"><span class="string">set nocompatible</span></span><br><span class="line"><span class="string">&quot;</span>显示行号</span><br><span class="line"><span class="built_in">set</span> number</span><br><span class="line"><span class="string">&quot;设置在编辑过程中右下角显示光标的行列信息</span></span><br><span class="line"><span class="string">set ruler</span></span><br><span class="line"><span class="string">&quot;</span>在状态栏显示正在输入的命令</span><br><span class="line"><span class="built_in">set</span> showcmd</span><br><span class="line"><span class="string">&quot;设置历史记录条数</span></span><br><span class="line"><span class="string">set history=1000</span></span><br><span class="line"><span class="string">&quot;</span>设置取消备份 禁止临时文件的生成</span><br><span class="line"><span class="built_in">set</span> nobackup</span><br><span class="line"><span class="built_in">set</span> noswapfile</span><br><span class="line"><span class="string">&quot;设置匹配模式</span></span><br><span class="line"><span class="string">set showmatch</span></span><br><span class="line"><span class="string">&quot;</span>设置C/C++方式自动对齐</span><br><span class="line"><span class="built_in">set</span> autoindent</span><br><span class="line"><span class="built_in">set</span> cindent</span><br><span class="line"><span class="string">&quot;开启语法高亮功能</span></span><br><span class="line"><span class="string">syntax enable</span></span><br><span class="line"><span class="string">syntax on</span></span><br><span class="line"><span class="string">&quot;</span>指定配色方案为256色</span><br><span class="line"><span class="built_in">set</span> t_Co=256</span><br><span class="line"><span class="string">&quot;设置搜索时忽略大小写</span></span><br><span class="line"><span class="string">set ignorecase</span></span><br><span class="line"><span class="string">&quot;</span>配置backspace的工作方式</span><br><span class="line"><span class="built_in">set</span> backspace=indent,eol,start</span><br><span class="line"><span class="string">&quot;设置在vim中可以使用鼠标</span></span><br><span class="line"><span class="string">set mouse=a</span></span><br><span class="line"><span class="string">&quot;</span>设置tab宽度</span><br><span class="line"><span class="built_in">set</span> tabstop=4</span><br><span class="line"><span class="string">&quot;设置自动对齐空格数</span></span><br><span class="line"><span class="string">set shiftwidth=4</span></span><br><span class="line"><span class="string">&quot;</span>设置退格键时可以删除4个空格</span><br><span class="line"><span class="built_in">set</span> smarttab</span><br><span class="line"><span class="built_in">set</span> softtabstop=4</span><br><span class="line"><span class="string">&quot;将tab键自动转换为空格</span></span><br><span class="line"><span class="string">set expandtab</span></span><br><span class="line"><span class="string">&quot;</span>设置编码方式</span><br><span class="line"><span class="built_in">set</span> encoding=utf-8</span><br><span class="line"><span class="string">&quot;自动判断编码时 依次尝试以下编码</span></span><br><span class="line"><span class="string">set fileencodings=ucs-bom,utf-8,cp936,gb18030,big5,euc-jp,euc-kr,latin1</span></span><br><span class="line"><span class="string">&quot;</span>检测文件类型</span><br><span class="line">filetype on</span><br><span class="line"><span class="string">&quot;针对不同的文件采取不同的缩进方式</span></span><br><span class="line"><span class="string">filetype indent on</span></span><br><span class="line"><span class="string">&quot;</span>允许插件</span><br><span class="line">filetype plugin on</span><br><span class="line"><span class="string">&quot;启动智能补全</span></span><br><span class="line"><span class="string">filetype plugin indent on</span></span><br><span class="line"><span class="string">&quot;</span>允许在编辑模式下复制粘贴</span><br><span class="line"><span class="built_in">set</span> mouse=c</span><br><span class="line">syntax on</span><br></pre></td></tr></table></figure>
+
+
+  </div>
+</article>
+
+    </main>
+    <footer class="site-footer">
+  <div class="footer-inner">
+    
+    
+      <p class="footer-credit">This website is technically powered by the blog famework Hexo</p>
+    
+    
+      <p class="footer-credit">This page design was co-created by me and GPT-5.3-Codex.</p>
+    
+    
+      <p class="footer-credit"><em>The background image is Along the River During the Qingming Festival (清明上河图).</em></p>
+    
+    <p>&copy; 2023 Yi-Ming Ding</p>
+  </div>
+</footer>
+
+  </div>
+  <script src="/js/main.js"></script>
+</body>
+</html>
