@@ -164,7 +164,42 @@
         pointer.active = pointer.x >= 0 && pointer.y >= 0 && pointer.x <= rect.width && pointer.y <= rect.height;
       };
 
+      const burstParticles = function (event) {
+        const rect = panel.getBoundingClientRect();
+        const originX = event.clientX - rect.left;
+        const originY = event.clientY - rect.top;
+        const blastRadius = Math.max(160, Math.min(260, Math.min(width, height) * 0.62));
+
+        pointer.x = originX;
+        pointer.y = originY;
+        pointer.lastX = originX;
+        pointer.lastY = originY;
+        pointer.active = originX >= 0 && originY >= 0 && originX <= rect.width && originY <= rect.height;
+        pointer.energy = 1;
+        pointer.movedAt = performance.now();
+
+        particles.forEach(function (p, index) {
+          const dx = p.x - originX;
+          const dy = p.y - originY;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+          if (distance > blastRadius) return;
+
+          const falloff = 1 - distance / blastRadius;
+          const angle = distance > 0.1
+            ? Math.atan2(dy, dx)
+            : Math.random() * Math.PI * 2;
+          const randomSpread = (Math.random() - 0.5) * Math.PI * 0.82;
+          const ripple = Math.sin(index * 0.91 + performance.now() * 0.01) * Math.PI * 0.12;
+          const blastAngle = angle + randomSpread + ripple;
+          const speed = falloff * falloff * (4.8 + Math.random() * 6.8);
+
+          p.vx += Math.cos(blastAngle) * speed;
+          p.vy += Math.sin(blastAngle) * speed;
+        });
+      };
+
       panel.addEventListener('mousemove', setPointer, { passive: true });
+      panel.addEventListener('pointerdown', burstParticles, { passive: true });
       panel.addEventListener('mouseleave', function () {
         pointer.active = false;
       }, { passive: true });
