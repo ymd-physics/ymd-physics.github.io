@@ -103,7 +103,15 @@
     const effects = panels.map(function (panel) {
       const canvas = document.createElement('canvas');
       const ctx = canvas.getContext('2d');
-      const pointer = { x: 0, y: 0, active: false };
+      const pointer = {
+        x: 0,
+        y: 0,
+        lastX: 0,
+        lastY: 0,
+        active: false,
+        energy: 0,
+        movedAt: 0
+      };
       const particles = [];
       let targets = [];
       let width = 0;
@@ -135,6 +143,7 @@
             vx: (Math.random() - 0.5) * 0.18,
             vy: (Math.random() - 0.5) * 0.18,
             r: Math.random() * 1.05 + 0.85,
+            scatter: Math.random() * Math.PI * 2,
             target: target
           });
         }
@@ -142,8 +151,16 @@
 
       const setPointer = function (event) {
         const rect = panel.getBoundingClientRect();
-        pointer.x = event.clientX - rect.left;
-        pointer.y = event.clientY - rect.top;
+        const nextX = event.clientX - rect.left;
+        const nextY = event.clientY - rect.top;
+        const movement = pointer.active ? Math.hypot(nextX - pointer.lastX, nextY - pointer.lastY) : 0;
+
+        pointer.lastX = nextX;
+        pointer.lastY = nextY;
+        pointer.energy = clamp(pointer.energy * 0.78 + movement / 36, 0, 1);
+        pointer.movedAt = performance.now();
+        pointer.x = nextX;
+        pointer.y = nextY;
         pointer.active = pointer.x >= 0 && pointer.y >= 0 && pointer.x <= rect.width && pointer.y <= rect.height;
       };
 
@@ -174,7 +191,12 @@
         const particles = effect.particles;
         const width = size.width;
         const height = size.height;
+        const now = performance.now();
         const symbolRadius = Math.max(58, Math.min(96, Math.min(width, height) * 0.24));
+        const movementAge = now - pointer.movedAt;
+        const movementEnergy = pointer.active
+          ? pointer.energy * (movementAge < 140 ? 1 : 0.95)
+          : 0;
         const center = pointer.active
           ? {
               x: clamp(pointer.x, symbolRadius + 18, Math.max(symbolRadius + 18, width - symbolRadius - 18)),
@@ -199,9 +221,22 @@
               const proximity = Math.max(0, 1 - distance / radius);
               const pointerDistance = Math.hypot(pointer.x - p.x, pointer.y - p.y);
               const pointerBoost = Math.max(0, 1 - pointerDistance / 230);
-              const pull = 0.0036 + proximity * proximity * 0.018 + pointerBoost * 0.018;
+              const nearMovement = movementEnergy * pointerBoost;
+              const pull = (0.0036 + proximity * proximity * 0.018 + pointerBoost * 0.018) * (1 - nearMovement * 0.62);
               p.vx += (dx / distance) * pull;
               p.vy += (dy / distance) * pull;
+
+              if (nearMovement > 0.025 && pointerDistance > 0.1) {
+                const burst = nearMovement * nearMovement * 0.42;
+                const awayX = (p.x - pointer.x) / pointerDistance;
+                const awayY = (p.y - pointer.y) / pointerDistance;
+                const noise = Math.sin(p.scatter + now * 0.008 + i * 0.37);
+                const tangentX = -awayY * noise;
+                const tangentY = awayX * noise;
+
+                p.vx += awayX * burst + tangentX * burst * 0.72 + (Math.random() - 0.5) * burst * 0.34;
+                p.vy += awayY * burst + tangentY * burst * 0.72 + (Math.random() - 0.5) * burst * 0.34;
+              }
             }
           }
 
@@ -235,6 +270,8 @@
             }
           }
         }
+
+        pointer.energy *= movementAge > 80 ? 0.9 : 0.96;
       });
 
       window.requestAnimationFrame(tick);
