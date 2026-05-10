@@ -117,22 +117,18 @@
       let width = 0;
       let height = 0;
       let ratio = 1;
+      let canvasTop = 0;
+      let visible = true;
 
       canvas.className = 'celadon-line-canvas';
       canvas.setAttribute('aria-hidden', 'true');
+      canvas.style.left = '0';
+      canvas.style.right = 'auto';
+      canvas.style.bottom = 'auto';
       panel.insertBefore(canvas, panel.firstChild);
 
-      const resize = function () {
-        ratio = Math.min(window.devicePixelRatio || 1, 2);
-        width = panel.clientWidth;
-        height = panel.clientHeight;
-        canvas.width = Math.floor(width * ratio);
-        canvas.height = Math.floor(height * ratio);
-        canvas.style.width = width + 'px';
-        canvas.style.height = height + 'px';
-        ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
-
-        const count = Math.max(150, Math.min(280, Math.round((width * height) / 4300)));
+      const resetParticles = function () {
+        const count = Math.max(110, Math.min(220, Math.round((width * height) / 6200)));
         targets = buildTaijiTargets(count);
         particles.length = 0;
         for (let i = 0; i < count; i += 1) {
@@ -149,10 +145,45 @@
         }
       };
 
+      const syncCanvasFrame = function (forceResize) {
+        const rect = panel.getBoundingClientRect();
+        const viewportHeight = window.innerHeight || document.documentElement.clientHeight || 800;
+        const nextRatio = Math.min(window.devicePixelRatio || 1, 1.5);
+        const panelHeight = panel.clientHeight;
+        const nextWidth = panel.clientWidth;
+        const nextHeight = Math.max(1, Math.min(panelHeight, Math.max(180, viewportHeight + 320)));
+        const maxTop = Math.max(0, panelHeight - nextHeight);
+        const nextTop = clamp(-rect.top - 160, 0, maxTop);
+        const sizeChanged = forceResize || nextWidth !== width || nextHeight !== height || nextRatio !== ratio;
+
+        visible = rect.bottom > -260 && rect.top < viewportHeight + 260;
+        if (forceResize || Math.abs(nextTop - canvasTop) > 0.5) {
+          canvasTop = nextTop;
+          canvas.style.top = canvasTop + 'px';
+        }
+
+        if (!sizeChanged) return;
+
+        ratio = nextRatio;
+        width = nextWidth;
+        height = nextHeight;
+        canvas.style.width = width + 'px';
+        canvas.style.height = height + 'px';
+        canvas.width = Math.floor(width * ratio);
+        canvas.height = Math.floor(height * ratio);
+        ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+        resetParticles();
+      };
+
+      const resize = function () {
+        syncCanvasFrame(true);
+      };
+
       const setPointer = function (event) {
+        syncCanvasFrame(false);
         const rect = panel.getBoundingClientRect();
         const nextX = event.clientX - rect.left;
-        const nextY = event.clientY - rect.top;
+        const nextY = event.clientY - rect.top - canvasTop;
         const movement = pointer.active ? Math.hypot(nextX - pointer.lastX, nextY - pointer.lastY) : 0;
 
         pointer.lastX = nextX;
@@ -161,20 +192,21 @@
         pointer.movedAt = performance.now();
         pointer.x = nextX;
         pointer.y = nextY;
-        pointer.active = pointer.x >= 0 && pointer.y >= 0 && pointer.x <= rect.width && pointer.y <= rect.height;
+        pointer.active = pointer.x >= 0 && pointer.y >= 0 && pointer.x <= width && pointer.y <= height;
       };
 
       const burstParticles = function (event) {
+        syncCanvasFrame(false);
         const rect = panel.getBoundingClientRect();
         const originX = event.clientX - rect.left;
-        const originY = event.clientY - rect.top;
+        const originY = event.clientY - rect.top - canvasTop;
         const blastRadius = Math.max(160, Math.min(260, Math.min(width, height) * 0.62));
 
         pointer.x = originX;
         pointer.y = originY;
         pointer.lastX = originX;
         pointer.lastY = originY;
-        pointer.active = originX >= 0 && originY >= 0 && originX <= rect.width && originY <= rect.height;
+        pointer.active = originX >= 0 && originY >= 0 && originX <= width && originY <= height;
         pointer.energy = 1;
         pointer.movedAt = performance.now();
 
@@ -205,7 +237,15 @@
       }, { passive: true });
 
       resize();
-      return { ctx: ctx, pointer: pointer, particles: particles, resize: resize, getSize: function () { return { width: width, height: height }; } };
+      return {
+        ctx: ctx,
+        pointer: pointer,
+        particles: particles,
+        resize: resize,
+        sync: syncCanvasFrame,
+        isVisible: function () { return visible; },
+        getSize: function () { return { width: width, height: height }; }
+      };
     });
 
     const particleColor = function (tone, alpha) {
@@ -220,6 +260,9 @@
 
     const tick = function () {
       effects.forEach(function (effect) {
+        effect.sync(false);
+        if (!effect.isVisible()) return;
+
         const size = effect.getSize();
         const ctx = effect.ctx;
         const pointer = effect.pointer;
