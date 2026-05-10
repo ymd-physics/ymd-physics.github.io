@@ -29,4 +29,233 @@
       if (toggle) toggle.setAttribute('aria-expanded', 'false');
     }
   });
+
+  const initCeladonLines = function () {
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const coarsePointer = window.matchMedia('(pointer: coarse)').matches;
+    const canvasSupported = Boolean(document.createElement('canvas').getContext);
+
+    if (reduceMotion || coarsePointer || !canvasSupported) return;
+
+    const panels = Array.prototype.slice.call(document.querySelectorAll('.entry-panel, .section-panel, .hero-panel'));
+    if (!panels.length) return;
+
+    const clamp = function (value, min, max) {
+      return Math.min(Math.max(value, min), max);
+    };
+
+    const taijiTone = function (x, y) {
+      const inTopLobe = Math.hypot(x, y + 0.5) < 0.5;
+      const inBottomLobe = Math.hypot(x, y - 0.5) < 0.5;
+      let dark = x < 0;
+
+      if (inTopLobe) dark = false;
+      if (inBottomLobe) dark = true;
+
+      return dark ? 'dark' : 'light';
+    };
+
+    const buildTaijiTargets = function (count) {
+      const targets = [];
+      const mainCount = Math.max(40, Math.round(count * 0.84));
+      const goldenAngle = Math.PI * (3 - Math.sqrt(5));
+      const holeRadius = 0.145;
+      let index = 0;
+
+      while (targets.length < mainCount && index < mainCount * 3) {
+        const radius = Math.sqrt((index + 0.5) / mainCount) * 0.94;
+        const angle = index * goldenAngle;
+        const x = Math.cos(angle) * radius;
+        const y = Math.sin(angle) * radius;
+        const topHole = Math.hypot(x, y + 0.5) < holeRadius;
+        const bottomHole = Math.hypot(x, y - 0.5) < holeRadius;
+
+        if (!topHole && !bottomHole) {
+          targets.push({
+            x: x,
+            y: y,
+            tone: taijiTone(x, y)
+          });
+        }
+
+        index += 1;
+      }
+
+      const holeCount = Math.max(14, Math.round(count * 0.08));
+      for (let i = 0; i < holeCount; i += 1) {
+        const angle = (i / holeCount) * Math.PI * 2;
+        const radius = (i % 2 ? 0.05 : 0.1);
+        targets.push({
+          x: Math.cos(angle) * radius,
+          y: -0.5 + Math.sin(angle) * radius,
+          tone: 'dark-dot'
+        });
+        targets.push({
+          x: Math.cos(angle) * radius,
+          y: 0.5 + Math.sin(angle) * radius,
+          tone: 'light-dot'
+        });
+      }
+
+      return targets.slice(0, count);
+    };
+
+    const effects = panels.map(function (panel) {
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      const pointer = { x: 0, y: 0, active: false };
+      const particles = [];
+      let targets = [];
+      let width = 0;
+      let height = 0;
+      let ratio = 1;
+
+      canvas.className = 'celadon-line-canvas';
+      canvas.setAttribute('aria-hidden', 'true');
+      panel.insertBefore(canvas, panel.firstChild);
+
+      const resize = function () {
+        ratio = Math.min(window.devicePixelRatio || 1, 2);
+        width = panel.clientWidth;
+        height = panel.clientHeight;
+        canvas.width = Math.floor(width * ratio);
+        canvas.height = Math.floor(height * ratio);
+        canvas.style.width = width + 'px';
+        canvas.style.height = height + 'px';
+        ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+
+        const count = Math.max(150, Math.min(280, Math.round((width * height) / 4300)));
+        targets = buildTaijiTargets(count);
+        particles.length = 0;
+        for (let i = 0; i < count; i += 1) {
+          const target = targets[i % targets.length];
+          particles.push({
+            x: Math.random() * width,
+            y: Math.random() * height,
+            vx: (Math.random() - 0.5) * 0.18,
+            vy: (Math.random() - 0.5) * 0.18,
+            r: Math.random() * 1.05 + 0.85,
+            target: target
+          });
+        }
+      };
+
+      const setPointer = function (event) {
+        const rect = panel.getBoundingClientRect();
+        pointer.x = event.clientX - rect.left;
+        pointer.y = event.clientY - rect.top;
+        pointer.active = pointer.x >= 0 && pointer.y >= 0 && pointer.x <= rect.width && pointer.y <= rect.height;
+      };
+
+      panel.addEventListener('mousemove', setPointer, { passive: true });
+      panel.addEventListener('mouseleave', function () {
+        pointer.active = false;
+      }, { passive: true });
+
+      resize();
+      return { ctx: ctx, pointer: pointer, particles: particles, resize: resize, getSize: function () { return { width: width, height: height }; } };
+    });
+
+    const particleColor = function (tone, alpha) {
+      if (tone === 'light' || tone === 'light-dot') return 'rgba(255, 254, 247, ' + alpha.toFixed(3) + ')';
+      return 'rgba(31, 111, 117, ' + alpha.toFixed(3) + ')';
+    };
+
+    const particleStroke = function (tone, alpha) {
+      if (tone === 'light' || tone === 'light-dot') return 'rgba(31, 111, 117, ' + (alpha * 0.7).toFixed(3) + ')';
+      return 'rgba(16, 72, 66, ' + (alpha * 0.85).toFixed(3) + ')';
+    };
+
+    const tick = function () {
+      effects.forEach(function (effect) {
+        const size = effect.getSize();
+        const ctx = effect.ctx;
+        const pointer = effect.pointer;
+        const particles = effect.particles;
+        const width = size.width;
+        const height = size.height;
+        const symbolRadius = Math.max(58, Math.min(96, Math.min(width, height) * 0.24));
+        const center = pointer.active
+          ? {
+              x: clamp(pointer.x, symbolRadius + 18, Math.max(symbolRadius + 18, width - symbolRadius - 18)),
+              y: clamp(pointer.y, symbolRadius + 18, Math.max(symbolRadius + 18, height - symbolRadius - 18))
+            }
+          : null;
+
+        ctx.clearRect(0, 0, width, height);
+
+        for (let i = 0; i < particles.length; i += 1) {
+          const p = particles[i];
+
+          if (pointer.active) {
+            const targetX = center.x + p.target.x * symbolRadius;
+            const targetY = center.y + p.target.y * symbolRadius;
+            const dx = targetX - p.x;
+            const dy = targetY - p.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            const radius = Math.max(260, Math.sqrt(width * width + height * height) * 0.72);
+
+            if (distance > 1) {
+              const proximity = Math.max(0, 1 - distance / radius);
+              const pointerDistance = Math.hypot(pointer.x - p.x, pointer.y - p.y);
+              const pointerBoost = Math.max(0, 1 - pointerDistance / 230);
+              const pull = 0.0036 + proximity * proximity * 0.018 + pointerBoost * 0.018;
+              p.vx += (dx / distance) * pull;
+              p.vy += (dy / distance) * pull;
+            }
+          }
+
+          p.x += p.vx;
+          p.y += p.vy;
+          p.vx *= 0.985;
+          p.vy *= 0.985;
+
+          if (p.x < -20) p.x = width + 20;
+          if (p.x > width + 20) p.x = -20;
+          if (p.y < -20) p.y = height + 20;
+          if (p.y > height + 20) p.y = -20;
+
+          ctx.beginPath();
+          ctx.fillStyle = particleColor(p.target.tone, p.target.tone === 'light' || p.target.tone === 'light-dot' ? 0.82 : 0.58);
+          ctx.strokeStyle = particleStroke(p.target.tone, 0.62);
+          ctx.lineWidth = 0.55;
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.stroke();
+
+          if (pointer.active) {
+            const dx = p.x - pointer.x;
+            const dy = p.y - pointer.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            if (distance < 190) {
+              ctx.beginPath();
+              ctx.fillStyle = particleStroke(p.target.tone, 0.12 * (1 - distance / 190));
+              ctx.arc(pointer.x, pointer.y, 1.6, 0, Math.PI * 2);
+              ctx.fill();
+            }
+          }
+        }
+      });
+
+      window.requestAnimationFrame(tick);
+    };
+
+    window.addEventListener('resize', function () {
+      effects.forEach(function (effect) {
+        effect.resize();
+      });
+    }, { passive: true });
+
+    document.addEventListener('visibilitychange', function () {
+      if (!document.hidden) {
+        effects.forEach(function (effect) {
+          effect.resize();
+        });
+      }
+    });
+
+    window.requestAnimationFrame(tick);
+  };
+
+  initCeladonLines();
 })();

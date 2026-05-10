@@ -35,7 +35,7 @@ body {
   color: var(--ink);
   background:
     linear-gradient(rgba(238, 244, 238, 0.72), rgba(238, 244, 238, 0.72)),
-    url("/images/qingming-bg.jpg");
+    url("/images/bamboo-shadow.svg");
   background-size: cover;
   background-position: center center;
   background-repeat: no-repeat;
@@ -58,6 +58,7 @@ body::after {
   content: "";
   position: fixed;
   inset: 0;
+  z-index: 0;
   pointer-events: none;
   background: radial-gradient(circle at center, transparent 35%, rgba(51, 39, 31, 0.08) 100%);
 }
@@ -84,7 +85,30 @@ img {
 
 .site-shell {
   position: relative;
+  z-index: 1;
   overflow: hidden;
+}
+
+.celadon-line-canvas {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.88;
+  mix-blend-mode: multiply;
+}
+
+.hero-panel,
+.section-panel,
+.entry-panel {
+  isolation: isolate;
+}
+
+.hero-panel > :not(.celadon-line-canvas),
+.section-panel > :not(.celadon-line-canvas),
+.entry-panel > :not(.celadon-line-canvas) {
+  position: relative;
+  z-index: 1;
 }
 
 .ink-wash {
@@ -1287,6 +1311,356 @@ img {
 .footer-credit .lang-en {
   font-size: inherit;
   line-height: inherit;
+}
+
+/* New Chinese refresh: lighter surfaces, cleaner typography, quieter ornament. */
+:root {
+  --paper: #f6f8f3;
+  --paper-deep: #e7eee5;
+  --paper-soft: rgba(255, 255, 252, 0.78);
+  --ink: #17231e;
+  --ink-soft: #3c4b44;
+  --ink-muted: #6b776f;
+  --ink-en: #536b61;
+  --ink-en-strong: #2f5f4e;
+  --line: rgba(47, 95, 78, 0.14);
+  --line-strong: rgba(47, 95, 78, 0.28);
+  --cinnabar: #2f5f4e;
+  --jade: #4e7967;
+  --gold: #a98f55;
+  --shadow: 0 18px 48px rgba(15, 36, 28, 0.08);
+  --radius-lg: 18px;
+  --radius-md: 12px;
+  --radius-sm: 8px;
+}
+
+body {
+  background:
+    linear-gradient(120deg, rgba(244, 248, 243, 0.9), rgba(236, 244, 238, 0.82)),
+    url("/images/bamboo-shadow.svg");
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Noto Sans SC", "Microsoft YaHei", sans-serif;
+  line-height: 1.82;
+}
+
+body::after {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.16), rgba(231, 238, 229, 0.08)),
+    radial-gradient(circle at center, transparent 48%, rgba(15, 36, 28, 0.06) 100%);
+}
+
+.ink-wash {
+  display: none;
+}
+
+.masthead-frame {
+  padding: 0.82rem 1rem;
+  border: 1px solid rgba(47, 95, 78, 0.13);
+  border-radius: 22px;
+  background: rgba(255, 255, 252, 0.76);
+  box-shadow: 0 12px 34px rgba(15, 36, 28, 0.07);
+}
+
+.is-scrolled .masthead-frame {
+  background: rgba(255, 255, 252, 0.9);
+  box-shadow: 0 16px 42px rgba(15, 36, 28, 0.1);
+}
+
+.brand-seal {
+  width: 2.72rem;
+  height: 2.72rem;
+  border-radius: 8px;
+  background: linear-gradient(145deg, #23483c, #386a58);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.28), 0 12px 22px rgba(20, 55, 43, 0.18);
+}
+
+.brand-copy strong {
+  font-size: 0.96rem;
+  font-weight: 650;
+  letter-spacing: 0.06em;
+}
+
+.brand-copy small {
+  color: #66776d;
+  font-size: 0.76rem;
+  letter-spacing: 0.06em;
+}
+
+.nav-link {
+  padding: 0.5rem 0.78rem;
+  border-radius: 10px;
+  color: #40524a;
+}
+
+.nav-link:hover,
+.nav-link.is-active {
+  color: #fff;
+  background: rgba(47, 95, 78, 0.9);
+}
+
+.nav-link:hover .lang-en,
+.nav-link.is-active .lang-en {
+  color: rgba(255, 255, 255, 0.76);
+}
+
+.hero-panel,
+.section-panel,
+.entry-panel {
+  border: 1px solid rgba(47, 95, 78, 0.13);
+  background: rgba(255, 255, 252, 0.84);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(10px);
+}
+
+.hero-panel::before,
+.section-panel::before,
+.entry-panel::before {
+  inset: 0 0 auto;
+  height: 3px;
+  background: linear-gradient(90deg, rgba(47, 95, 78, 0.76), rgba(169, 143, 85, 0.45), transparent);
+}
+
+.hero-panel {
+  padding: clamp(2rem, 4vw, 3.5rem);
+}
+
+.hero-badge,
+.section-kicker {
+  color: var(--ink-en-strong);
+  font-size: 0.78rem;
+  letter-spacing: 0.14em;
+}
+
+.hero-panel h1,
+.section-heading h1,
+.section-heading h2,
+.entry-header h1 {
+  font-family: "Songti SC", "Noto Serif SC", "Source Han Serif SC", serif;
+  font-weight: 600;
+  letter-spacing: 0.025em;
+}
+
+.hero-subtitle,
+.hero-intro,
+.section-note {
+  color: var(--ink-muted);
+}
+
+.hero-title .lang-en,
+.page-title .lang-en {
+  color: var(--ink-en-strong);
+}
+
+.hero-seal {
+  border-color: rgba(47, 95, 78, 0.22);
+  border-radius: 14px;
+  background: rgba(255, 255, 252, 0.64);
+  color: #2f5f4e;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.56), 0 16px 34px rgba(15, 36, 28, 0.08);
+}
+
+.post-card {
+  border: 1px solid rgba(47, 95, 78, 0.12);
+  border-radius: 14px;
+  background: rgba(255, 255, 252, 0.78);
+}
+
+.post-card:hover {
+  border-color: rgba(47, 95, 78, 0.28);
+  box-shadow: 0 16px 34px rgba(15, 36, 28, 0.1);
+}
+
+.entry-content {
+  font-size: 1.02rem;
+  line-height: 1.9;
+}
+
+.entry-content h1,
+.entry-content h2,
+.entry-content h3,
+.entry-content h4,
+.entry-content h5,
+.entry-content h6 {
+  letter-spacing: 0.025em;
+}
+
+.entry-content h1 {
+  border-bottom-color: rgba(47, 95, 78, 0.16);
+}
+
+.entry-content h1::after {
+  background: linear-gradient(90deg, rgba(47, 95, 78, 0.88), rgba(169, 143, 85, 0.42));
+}
+
+.entry-content h2 {
+  border-bottom-color: rgba(47, 95, 78, 0.14);
+}
+
+.entry-content h2::before {
+  width: 0.38rem;
+  height: 0.38rem;
+  border-color: rgba(47, 95, 78, 0.5);
+  background: rgba(47, 95, 78, 0.16);
+}
+
+.entry-content h3 {
+  border: 0;
+  border-radius: 8px;
+  background: linear-gradient(90deg, #254f42, #376f5b);
+  box-shadow: 0 10px 22px rgba(15, 36, 28, 0.11);
+}
+
+.entry-content blockquote {
+  border-left-color: rgba(47, 95, 78, 0.75);
+  border-radius: 8px;
+  background: rgba(247, 250, 246, 0.78);
+}
+
+.entry-content img {
+  border-radius: 12px;
+  border-color: rgba(47, 95, 78, 0.2);
+  background: rgba(255, 255, 252, 0.86);
+  box-shadow: 0 16px 34px rgba(15, 36, 28, 0.11);
+}
+
+.gallery-page .entry-content h3,
+.publications-page .entry-content h5 {
+  border: 0;
+  border-radius: 10px 10px 0 0;
+  background: linear-gradient(90deg, #254f42, #376f5b);
+  box-shadow: 0 12px 24px rgba(15, 36, 28, 0.12);
+}
+
+.gallery-page .entry-content h3 + p,
+.publications-page .entry-content h5 + ul {
+  border-color: rgba(47, 95, 78, 0.18);
+  background: rgba(255, 255, 252, 0.82);
+  box-shadow: 0 12px 24px rgba(15, 36, 28, 0.08);
+}
+
+.gallery-page .entry-content h3 + p + p img {
+  border-radius: 12px;
+  border-color: rgba(47, 95, 78, 0.18);
+  background: rgba(255, 255, 252, 0.88);
+  box-shadow: 0 18px 38px rgba(15, 36, 28, 0.13);
+}
+
+.publications-page .entry-content > blockquote:first-child {
+  border-left-color: rgba(47, 95, 78, 0.7);
+  background: rgba(247, 250, 246, 0.82);
+  border-radius: 8px;
+}
+
+.footer-inner {
+  color: #65746c;
+}
+
+/* Celadon Studio: a cooler, gallery-like new Chinese direction. */
+:root {
+  --paper: #f4f7f3;
+  --paper-deep: #e2ece8;
+  --paper-soft: rgba(252, 254, 250, 0.74);
+  --ink: #152522;
+  --ink-soft: #334744;
+  --ink-muted: #637370;
+  --ink-en: #4f7778;
+  --ink-en-strong: #1f6f75;
+  --line: rgba(31, 111, 117, 0.14);
+  --line-strong: rgba(31, 111, 117, 0.26);
+  --cinnabar: #1f6f75;
+  --jade: #3f8582;
+  --gold: #b19a64;
+  --shadow: 0 22px 56px rgba(20, 52, 53, 0.08);
+  --radius-lg: 16px;
+  --radius-md: 10px;
+  --radius-sm: 7px;
+}
+
+body {
+  background:
+    linear-gradient(135deg, rgba(247, 249, 244, 0.88), rgba(226, 238, 234, 0.76) 48%, rgba(243, 247, 241, 0.86)),
+    url("/images/bamboo-shadow.svg");
+  background-size: cover;
+  background-position: center top;
+}
+
+body::after {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.18), rgba(223, 236, 232, 0.08)),
+    radial-gradient(circle at 50% 30%, rgba(255, 255, 255, 0.04), transparent 44%),
+    radial-gradient(circle at center, transparent 54%, rgba(13, 45, 45, 0.055) 100%);
+}
+
+.masthead-frame {
+  border-color: rgba(31, 111, 117, 0.12);
+  background: rgba(251, 254, 250, 0.72);
+  box-shadow: 0 14px 40px rgba(20, 52, 53, 0.07);
+}
+
+.brand-seal {
+  background: linear-gradient(145deg, #154e52, #23777a);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.3), 0 12px 26px rgba(22, 86, 88, 0.2);
+}
+
+.nav-link:hover,
+.nav-link.is-active {
+  background: #1f6f75;
+}
+
+.hero-panel,
+.section-panel,
+.entry-panel {
+  border-color: rgba(31, 111, 117, 0.12);
+  background: rgba(252, 254, 250, 0.78);
+  box-shadow: var(--shadow);
+}
+
+.hero-panel::before,
+.section-panel::before,
+.entry-panel::before {
+  background: linear-gradient(90deg, rgba(31, 111, 117, 0.72), rgba(177, 154, 100, 0.34), transparent);
+}
+
+.hero-seal {
+  border-color: rgba(31, 111, 117, 0.2);
+  background: rgba(252, 254, 250, 0.58);
+  color: #1f6f75;
+}
+
+.post-card,
+.gallery-page .entry-content h3 + p,
+.publications-page .entry-content h5 + ul {
+  border-color: rgba(31, 111, 117, 0.13);
+  background: rgba(252, 254, 250, 0.76);
+}
+
+.entry-content h3,
+.gallery-page .entry-content h3,
+.publications-page .entry-content h5 {
+  background: linear-gradient(90deg, #155f66, #26868a);
+  box-shadow: 0 12px 24px rgba(20, 72, 75, 0.12);
+}
+
+.entry-content h1::after {
+  background: linear-gradient(90deg, rgba(31, 111, 117, 0.9), rgba(177, 154, 100, 0.4));
+}
+
+.entry-content blockquote,
+.publications-page .entry-content > blockquote:first-child {
+  border-left-color: rgba(31, 111, 117, 0.68);
+  background: rgba(244, 250, 247, 0.78);
+}
+
+.entry-content img,
+.gallery-page .entry-content h3 + p + p img {
+  border-color: rgba(31, 111, 117, 0.18);
+  background: rgba(252, 254, 250, 0.86);
+  box-shadow: 0 18px 38px rgba(20, 52, 53, 0.1);
+}
+
+.footer-inner {
+  color: #607472;
 }
 
 @media (max-width: 900px) {
