@@ -273,6 +273,18 @@
                 p.vy += awayY * burst + tangentY * burst * 0.72 + (Math.random() - 0.5) * burst * 0.34;
               }
             }
+          } else {
+            const driftAngle = p.scatter + now * 0.0018 + Math.sin(now * 0.001 + i * 0.73) * 1.4;
+            const jitter = 0.012 + Math.random() * 0.016;
+            p.vx += Math.cos(driftAngle) * jitter + (Math.random() - 0.5) * 0.018;
+            p.vy += Math.sin(driftAngle) * jitter + (Math.random() - 0.5) * 0.018;
+
+            const freeSpeed = Math.sqrt(p.vx * p.vx + p.vy * p.vy);
+            const maxFreeSpeed = 1.35;
+            if (freeSpeed > maxFreeSpeed) {
+              p.vx = (p.vx / freeSpeed) * maxFreeSpeed;
+              p.vy = (p.vy / freeSpeed) * maxFreeSpeed;
+            }
           }
 
           p.x += p.vx;
